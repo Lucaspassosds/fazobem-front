@@ -1,0 +1,105 @@
+<div id="landing">
+  <div class="landing-container">
+    <h5>Seja a diferença. <span class="app-name">Faz o bem.</span></h5>
+
+    <div class="stage-container">
+      <div class="stage-texts" *ngIf="stage.text?.length">
+        <span
+          class="stage-text"
+          *ngFor="let text of stage.text"
+          [ngClass]="text.classes"
+          >{{ text.content
+          }}<span
+            *ngIf="text.actionName"
+            class="stage-action"
+            (click)="text.callback()"
+            >{{ text.actionName }}</span
+          >
+        </span>
+      </div>
+      <div class="stage-form" *ngIf="stage.inputs?.length">
+        <form [formGroup]="formGroup" class="needs-validation">
+          <div
+            class="landing-input-container input-group has-validation mb-3"
+            *ngFor="let input of stage.inputs"
+          >
+            <div class="input-group-prepend">
+              <span class="input-group-text" [id]="input.label">{{
+                input.label
+              }}</span>
+            </div>
+            <input
+              class="landing-input form-control"
+              [type]="input.type"
+              [placeholder]="input.placeholder"
+              [formControlName]="input.name"
+              [attr.aria-label]="input.placeholder"
+              [attr.aria-describedby]="input.label"
+              [ngClass]="
+                formGroup.get(input.name).touched
+                  ? formGroup.get(input.name).errors ||
+                    (input.name === 'confirmPassword' &&
+                      formGroup.hasError('passwordMismatch') &&
+                      formGroup.get('confirmPassword')?.dirty)
+                    ? 'is-invalid'
+                    : 'is-valid'
+                  : ''
+              "
+              required
+            />
+            <div class="invalid-feedback" style="text-align: left">
+              <ng-container
+                *ngIf="
+                  input.name === 'confirmPassword' &&
+                  formGroup.hasError('passwordMismatch') &&
+                  formGroup.get('confirmPassword')?.dirty
+                "
+              >
+                Senhas não coincidem
+              </ng-container>
+              <ng-container
+                *ngIf="formGroup.get(input.name)?.hasError('minlength')"
+              >
+                A senha deve ter no mínimo 8 caracteres
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  formGroup.get(input.name).hasError('required') &&
+                  (formGroup.get(input.name).touched ||
+                    formGroup.get(input.name).dirty)
+                "
+              >
+                Por favor insira um valor válido para o campo acima.
+              </ng-container>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="stage-buttons" *ngIf="stage.buttons?.length">
+        <button
+          type="submit"
+          class="btn"
+          *ngFor="let button of stage.buttons"
+          [ngClass]="button.classes"
+          (click)="button.callback()"
+        >
+          {{ button.text }}
+        </button>
+      </div>
+      <div class="stage-footer" *ngIf="stage.footer?.length">
+        <span
+          *ngFor="let text of stage.footer"
+          [ngClass]="text.classes"
+          (click)="text?.callback()"
+          >{{ text.content
+          }}<span
+            *ngIf="text.actionName"
+            class="stage-action"
+            (click)="text.callback()"
+            >{{ text.actionName }}</span
+          ></span
+        >
+      </div>
+    </div>
+  </div>
+</div>
