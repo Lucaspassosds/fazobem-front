@@ -1,3 +1,69 @@
 <div id="landing">
-  <h1>FAZOBEM</h1>
+  <div class="landing-container">
+    <h5>Seja a diferença. <span class="app-name">Faz o bem.</span></h5>
+
+    <div class="stage-container">
+      <div class="stage-texts">
+        <span
+          class="stage-text"
+          *ngFor="let text of stage.text"
+          [ngClass]="text.classes"
+          >{{ text.content
+          }}<span
+            *ngIf="text.actionName"
+            class="stage-action"
+            (click)="text.callback()"
+            >{{ text.actionName }}</span
+          >
+        </span>
+      </div>
+      <div class="stage-form">
+        <form [formGroup]="formGroup">
+          <div
+            class="landing-input-container input-group mb-3"
+            *ngFor="let input of stage.inputs"
+          >
+            <div class="input-group-prepend">
+              <span class="input-group-text" [id]="input.label">{{
+                input.label
+              }}</span>
+            </div>
+            <input
+              class="landing-input form-control"
+              [type]="input.type"
+              [placeholder]="input.placeholder"
+              [formControlName]="input.name"
+              [attr.aria-label]="input.placeholder"
+              [attr.aria-describedby]="input.label"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="stage-buttons">
+        <button
+          type="button"
+          class="btn"
+          *ngFor="let button of stage.buttons"
+          [ngClass]="button.classes"
+          (click)="button.callback()"
+        >
+          {{ button.text }}
+        </button>
+      </div>
+      <div class="stage-footer">
+        <span
+          *ngFor="let text of stage.footer"
+          [ngClass]="text.classes"
+          (click)="text?.callback()"
+          >{{ text.content
+          }}<span
+            *ngIf="text.actionName"
+            class="stage-action"
+            (click)="text.callback()"
+            >{{ text.actionName }}</span
+          ></span
+        >
+      </div>
+    </div>
+  </div>
 </div>
