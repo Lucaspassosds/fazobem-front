@@ -5,6 +5,19 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { lastValueFrom } from 'rxjs';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+
+type InputType =
+  | 'text'
+  | 'password'
+  | 'number'
+  | 'date'
+  | 'checkbox'
+  | 'radio'
+  | 'email'
+  | 'file'
+  | 'hidden';
 
 interface LandingStage {
   text?: {
@@ -16,7 +29,7 @@ interface LandingStage {
   inputs?: {
     label: string;
     name: string;
-    type: string;
+    type: InputType;
     placeholder?: string;
   }[];
   buttons?: {
@@ -65,6 +78,37 @@ export class LandingComponent implements OnInit {
         },
       ],
     },
+    login: {
+      text: [],
+      inputs: [
+        {
+          name: 'email',
+          type: 'text',
+          label: 'Email',
+          placeholder: 'joao@exemplo.com',
+        },
+        {
+          name: 'password',
+          type: 'password',
+          label: 'Informe sua senha',
+          placeholder: '12345678',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Login',
+          callback: () => this.login(),
+          classes: ['landing-button'],
+        },
+      ],
+      footer: [
+        {
+          content: '',
+          actionName: 'Voltar',
+          callback: () => this.changeStage('landing'),
+        },
+      ],
+    },
     'register-start': {
       text: [
         {
@@ -106,16 +150,28 @@ export class LandingComponent implements OnInit {
           placeholder: 'Ex.: João da Silva',
         },
         {
-          name: 'cpf',
+          name: 'email',
           type: 'text',
-          label: 'CPF (Somente números)',
-          placeholder: '12345678910',
+          label: 'Email',
+          placeholder: 'joao@exemplo.com',
         },
         {
-          name: 'age',
-          type: 'number',
-          label: 'Idade',
-          placeholder: 'Informe sua idade',
+          name: 'birthdate',
+          type: 'date',
+          label: 'Data de nascimento',
+          placeholder: 'DD/MM/AAAA',
+        },
+        {
+          name: 'password',
+          type: 'password',
+          label: 'Crie uma senha',
+          placeholder: '12345678',
+        },
+        {
+          name: 'confirmPassword',
+          type: 'password',
+          label: 'Confirme sua senha',
+          placeholder: '12345678',
         },
       ],
       buttons: [
@@ -133,23 +189,94 @@ export class LandingComponent implements OnInit {
         },
       ],
     },
+    'register-form-admin': {
+      text: [
+        {
+          content:
+            'Caso já tenha sido liberado pelo Administrador do Sistema, por favor informe os dados a seguir para completar seu cadastro.',
+        },
+      ],
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          label: 'Nome completo',
+          placeholder: 'Ex.: João da Silva',
+        },
+        {
+          name: 'email',
+          type: 'text',
+          label: 'Email',
+          placeholder: 'joao@exemplo.com',
+        },
+        {
+          name: 'password',
+          type: 'password',
+          label: 'Crie uma senha',
+          placeholder: '12345678',
+        },
+        {
+          name: 'confirmPassword',
+          type: 'password',
+          label: 'Confirme sua senha',
+          placeholder: '12345678',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cadastrar',
+          callback: () => this.completeRegister('admin'),
+          classes: ['landing-button'],
+        },
+      ],
+      footer: [
+        {
+          content:
+            'Se não está conseguindo se cadastrar, por favor contate o Administrator do Sistema para solicitar a sua liberação.',
+        },
+        {
+          content: '',
+          actionName: 'Voltar',
+          callback: () => this.changeStage('register-start'),
+        },
+      ],
+    },
   };
 
   loginFormGroup: FormGroup;
   registerVoluntaryFormGroup: FormGroup;
-  registerOrganizationFormGroup: FormGroup;
+  registerAdminFormGroup: FormGroup;
   requestChangePasswordFormGroup: FormGroup;
   changePasswordFormGroup: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthenticationService
+  ) {}
   ngOnInit(): void {
-
-    this.registerVoluntaryFormGroup = this.formBuilder.group({
-      name: ['', Validators.required],
-      cpf: ['', Validators.required],
-      age: ['', Validators.required],
+    this.registerVoluntaryFormGroup = this.formBuilder.group(
+      {
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        birthdate: ['', Validators.required],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validator: this.passwordMatchValidator }
+    );
+    this.registerAdminFormGroup = this.formBuilder.group(
+      {
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validator: this.passwordMatchValidator }
+    );
+    this.loginFormGroup = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
-
   }
 
   changeStage(nextStage: stage) {
@@ -169,7 +296,7 @@ export class LandingComponent implements OnInit {
       return this.registerVoluntaryFormGroup;
     }
     if (currentStage === 'register-form-admin') {
-      return this.registerOrganizationFormGroup;
+      return this.registerAdminFormGroup;
     }
     if (currentStage === 'forgot-password') {
       return this.requestChangePasswordFormGroup;
@@ -181,7 +308,44 @@ export class LandingComponent implements OnInit {
     }
   }
 
-  completeRegister(registerType: 'voluntary' | 'admin') {
-    alert('I complete registration!');
+  async completeRegister(registerType: 'voluntary' | 'admin') {
+    this.formGroup.markAllAsTouched();
+    if (!this.formGroup.valid) {
+      return;
+    }
+    const { name, email, birthdate, password } = this.formGroup.getRawValue();
+    if (registerType === 'voluntary') {
+      const register$ = this.authService.registerVoluntary({
+        name,
+        email,
+        birthdate,
+        password,
+      });
+      const registrationFinish = await lastValueFrom(register$);
+      console.log({ registrationFinish });
+    }
+
+    this.changeStage('login');
+  }
+
+  async login() {
+    alert('I login!');
+  }
+
+  passwordMatchValidator(
+    control: AbstractControl
+  ): { [key: string]: any } | null {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+
+    if (
+      password &&
+      confirmPassword &&
+      password.value !== confirmPassword.value
+    ) {
+      return { passwordMismatch: true };
+    }
+
+    return null;
   }
 }

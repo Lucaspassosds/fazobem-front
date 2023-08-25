@@ -36,15 +36,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private requestRequiresToken(req: HttpRequest<any>): boolean {
     return (
       !/\/login$/.test(req.url) &&
-      !/\/otp-login$/.test(req.url) &&
-      !/\/social-register$/.test(req.url) &&
-      !/\/social-login$/.test(req.url) &&
-      !/\/complete-otp-register$/.test(req.url) &&
-      !/\/verify-otp-login$/.test(req.url) &&
       !/\/register$/.test(req.url) &&
-      !/\/app-config$/.test(req.url) &&
-      !/\/verify-email-register$/.test(req.url) &&
-      !/\/complete-register$/.test(req.url) &&
       !/\/request-change-password$/.test(req.url) &&
       !/\/change-password$/.test(req.url)
     );

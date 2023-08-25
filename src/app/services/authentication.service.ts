@@ -19,11 +19,21 @@ export class AuthenticationService {
   }
 
   // TODO: change body, change endpoint
-  register(body: {
+  registerVoluntary(body: {
     email: string;
-    otp: string;
+    name: string;
+    birthdate:string
     password: string;
-    confirmPassword: string;
+  }) {
+    return this.http.post(
+      `${environment.apiUrl}/auth/voluntary/register`,
+      body
+    );
+  }
+  registerAdmin(body: {
+    email: string;
+    name: string;
+    password: string;
   }) {
     return this.http.post(
       `${environment.apiUrl}/auth/admins/complete-register`,

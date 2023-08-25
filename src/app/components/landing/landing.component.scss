@@ -48,3 +48,9 @@
   cursor: pointer;
   font-weight: 600;
 }
+
+.stage-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
