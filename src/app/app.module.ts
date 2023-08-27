@@ -8,9 +8,12 @@ import { AuthInterceptor } from './interceptors/auth-interceptor';
 import { UnauthInterceptor } from './interceptors/unauth-interceptor';
 import { LandingComponent } from './components/landing/landing.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component';
+import { CompanyListComponent } from './components/company-list/company-list.component';
+import { CompanyCreateComponent } from './components/company-create/company-create.component';
 
 @NgModule({
-  declarations: [AppComponent, LandingComponent],
+  declarations: [AppComponent, LandingComponent, NavigationMenuComponent, CompanyListComponent, CompanyCreateComponent],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

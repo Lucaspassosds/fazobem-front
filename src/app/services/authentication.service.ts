@@ -54,10 +54,9 @@ export class AuthenticationService {
     );
   }
 
-  // TODO: change endpoint
   login(body: { email: string; password: string }) {
     return this.http
-      .post(`${environment.apiUrl}/auth/admins/login`, body)
+      .post(`${environment.apiUrl}/auth/login`, body)
       .pipe(
         tap(
           async (response) =>

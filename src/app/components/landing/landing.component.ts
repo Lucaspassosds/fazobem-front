@@ -5,9 +5,12 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { GlobalService } from 'src/app/services/global.service';
 import { securityQuestions } from 'src/constants/constants';
+import { User, UserRole } from 'src/constants/interfaces';
 
 type InputType =
   | 'text'
@@ -74,12 +77,12 @@ export class LandingComponent implements OnInit {
         {
           text: 'Entrar',
           callback: () => this.changeStage('login'),
-          classes: ['landing-button'],
+          classes: ['app-button'],
         },
         {
           text: 'Registrar',
           callback: () => this.changeStage('register-start'),
-          classes: ['landing-button'],
+          classes: ['app-button'],
         },
       ],
     },
@@ -103,7 +106,7 @@ export class LandingComponent implements OnInit {
         {
           text: 'Login',
           callback: () => this.login(),
-          classes: ['landing-button'],
+          classes: ['app-button'],
         },
       ],
       footer: [
@@ -129,12 +132,12 @@ export class LandingComponent implements OnInit {
         {
           text: 'Voluntário',
           callback: () => this.changeStage('register-form-voluntary'),
-          classes: ['landing-button'],
+          classes: ['app-button'],
         },
         {
           text: 'Organização',
           callback: () => this.changeStage('register-form-admin'),
-          classes: ['landing-button'],
+          classes: ['app-button'],
         },
       ],
       footer: [
@@ -202,7 +205,7 @@ export class LandingComponent implements OnInit {
         {
           text: 'Cadastrar',
           callback: () => this.completeRegister('voluntary'),
-          classes: ['landing-button'],
+          classes: ['app-button'],
         },
       ],
       footer: [
@@ -264,7 +267,7 @@ export class LandingComponent implements OnInit {
         {
           text: 'Cadastrar',
           callback: () => this.completeRegister('admin'),
-          classes: ['landing-button'],
+          classes: ['app-button'],
         },
       ],
       footer: [
@@ -298,7 +301,7 @@ export class LandingComponent implements OnInit {
         {
           text: 'Continuar',
           callback: () => this.requestChangePassword(),
-          classes: ['landing-button'],
+          classes: ['app-button'],
         },
       ],
       footer: [
@@ -344,7 +347,7 @@ export class LandingComponent implements OnInit {
         {
           text: 'Trocar senha',
           callback: () => this.changePassword(),
-          classes: ['landing-button'],
+          classes: ['app-button'],
         },
       ],
       footer: [
@@ -367,7 +370,9 @@ export class LandingComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private globalService: GlobalService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.registerVoluntaryFormGroup = this.formBuilder.group(
@@ -395,7 +400,7 @@ export class LandingComponent implements OnInit {
     );
     this.loginFormGroup = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required]],
     });
     this.requestChangePasswordFormGroup = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -470,7 +475,27 @@ export class LandingComponent implements OnInit {
   }
 
   async login() {
-    alert('I login!');
+    this.formGroup.markAllAsTouched();
+    if (!this.formGroup.valid) {
+      return;
+    }
+
+    const { email, password } = this.formGroup.getRawValue();
+
+    try {
+      const login$ = this.authService.login({ email, password });
+      const loginFinished: any = await lastValueFrom(login$);
+      const user: User = loginFinished.user;
+      this.globalService.currentUser = user;
+      this.router.navigate(['routes']);
+    } catch (err) {
+      console.error(err);
+      alert(
+        'Não foi possível realizar o seu login. ' +
+          'Por favor verifique se o email e senha foram inseridos corretamente e caso o erro persista ' +
+          'por favor entre em contato com o Administrador do Sistema.'
+      );
+    }
   }
 
   async requestChangePassword() {
