@@ -18,23 +18,36 @@ export class AuthenticationService {
     return !!session;
   }
 
-  // TODO: change body, change endpoint
   registerVoluntary(body: {
     email: string;
     name: string;
-    birthdate:string
+    birthdate: string;
     password: string;
+    securityQuestion: string;
+    securityAnswer: string;
   }) {
     return this.http.post(
       `${environment.apiUrl}/auth/voluntary/register`,
       body
     );
   }
-  registerAdmin(body: {
+
+  requestChangePassword(email: string) {
+    return this.http.post(
+      `${environment.apiUrl}/auth/request-change-password`,
+      { email }
+    );
+  }
+
+  changePassword(body: {
     email: string;
-    name: string;
     password: string;
+    securityAnswer: string;
   }) {
+    return this.http.post(`${environment.apiUrl}/auth/change-password`, body);
+  }
+
+  registerAdmin(body: { email: string; name: string; password: string }) {
     return this.http.post(
       `${environment.apiUrl}/auth/admins/complete-register`,
       body

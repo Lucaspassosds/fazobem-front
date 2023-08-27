@@ -23,55 +23,88 @@
             class="landing-input-container input-group has-validation mb-3"
             *ngFor="let input of stage.inputs"
           >
-            <div class="input-group-prepend">
-              <span class="input-group-text" [id]="input.label">{{
-                input.label
-              }}</span>
-            </div>
-            <input
-              class="landing-input form-control"
-              [type]="input.type"
-              [placeholder]="input.placeholder"
-              [formControlName]="input.name"
-              [attr.aria-label]="input.placeholder"
-              [attr.aria-describedby]="input.label"
-              [ngClass]="
-                formGroup.get(input.name).touched
-                  ? formGroup.get(input.name).errors ||
-                    (input.name === 'confirmPassword' &&
-                      formGroup.hasError('passwordMismatch') &&
-                      formGroup.get('confirmPassword')?.dirty)
-                    ? 'is-invalid'
-                    : 'is-valid'
-                  : ''
-              "
-              required
-            />
-            <div class="invalid-feedback" style="text-align: left">
-              <ng-container
-                *ngIf="
-                  input.name === 'confirmPassword' &&
-                  formGroup.hasError('passwordMismatch') &&
-                  formGroup.get('confirmPassword')?.dirty
+            <ng-container *ngIf="input.type === 'dropdown'; else regularInput">
+              <div class="dropdown" style="width: 100%;">
+                <button
+                  class="btn btn-secondary dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  (click)="input.openDropdown = !input.openDropdown"
+                  style="width: 100%;"
+                >
+                  {{ formGroup.get(input.name).value || input.placeholder }}
+                </button>
+                <div
+                  class="dropdown-menu"
+                  aria-labelledby="dropdownMenuButton"
+                  [ngStyle]="{ display: input.openDropdown ? 'block' : 'none' }"
+                >
+                  <a
+                    *ngFor="let option of input.options"
+                    class="dropdown-item"
+                    href="#"
+                    (click)="
+                      selectItem(option, input.name); input.openDropdown = false
+                    "
+                    >{{ option }}</a
+                  >
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #regularInput>
+              <div class="input-group-prepend">
+                <span class="input-group-text" [id]="input.label">{{
+                  input.label
+                }}</span>
+              </div>
+              <input
+                class="landing-input form-control"
+                [type]="input.type"
+                [placeholder]="input.placeholder"
+                [formControlName]="input.name"
+                [attr.aria-label]="input.placeholder"
+                [attr.aria-describedby]="input.label"
+                [ngClass]="
+                  formGroup.get(input.name).touched
+                    ? formGroup.get(input.name).errors ||
+                      (input.name === 'confirmPassword' &&
+                        formGroup.hasError('passwordMismatch') &&
+                        formGroup.get('confirmPassword')?.dirty)
+                      ? 'is-invalid'
+                      : 'is-valid'
+                    : ''
                 "
-              >
-                Senhas não coincidem
-              </ng-container>
-              <ng-container
-                *ngIf="formGroup.get(input.name)?.hasError('minlength')"
-              >
-                A senha deve ter no mínimo 8 caracteres
-              </ng-container>
-              <ng-container
-                *ngIf="
-                  formGroup.get(input.name).hasError('required') &&
-                  (formGroup.get(input.name).touched ||
-                    formGroup.get(input.name).dirty)
-                "
-              >
-                Por favor insira um valor válido para o campo acima.
-              </ng-container>
-            </div>
+                required
+              />
+              <div class="invalid-feedback" style="text-align: left">
+                <ng-container
+                  *ngIf="
+                    input.name === 'confirmPassword' &&
+                    formGroup.hasError('passwordMismatch') &&
+                    formGroup.get('confirmPassword')?.dirty
+                  "
+                >
+                  Senhas não coincidem
+                </ng-container>
+                <ng-container
+                  *ngIf="formGroup.get(input.name)?.hasError('minlength')"
+                >
+                  A senha deve ter no mínimo 8 caracteres
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    formGroup.get(input.name).hasError('required') &&
+                    (formGroup.get(input.name).touched ||
+                      formGroup.get(input.name).dirty)
+                  "
+                >
+                  Por favor insira um valor válido para o campo acima.
+                </ng-container>
+              </div>
+            </ng-template>
           </div>
         </form>
       </div>

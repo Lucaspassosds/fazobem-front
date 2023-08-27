@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { lastValueFrom } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { securityQuestions } from 'src/constants/constants';
 
 type InputType =
   | 'text'
@@ -17,6 +18,7 @@ type InputType =
   | 'radio'
   | 'email'
   | 'file'
+  | 'dropdown'
   | 'hidden';
 
 interface LandingStage {
@@ -31,6 +33,8 @@ interface LandingStage {
     name: string;
     type: InputType;
     placeholder?: string;
+    options?: string[];
+    openDropdown?: boolean;
   }[];
   buttons?: {
     text: string;
@@ -61,6 +65,7 @@ type stage =
 })
 export class LandingComponent implements OnInit {
   currentStage: stage = 'landing';
+  securityQuestion = '';
 
   stages: Record<string, LandingStage> = {
     landing: {
@@ -102,6 +107,11 @@ export class LandingComponent implements OnInit {
         },
       ],
       footer: [
+        {
+          content: '',
+          actionName: 'Esqueceu sua senha?',
+          callback: () => this.changeStage('forgot-password'),
+        },
         {
           content: '',
           actionName: 'Voltar',
@@ -173,6 +183,20 @@ export class LandingComponent implements OnInit {
           label: 'Confirme sua senha',
           placeholder: '12345678',
         },
+        {
+          name: 'securityQuestion',
+          type: 'dropdown',
+          label: 'Pergunta de Segurança',
+          placeholder: 'Escolha uma pergunta de segurança',
+          options: securityQuestions,
+          openDropdown: false,
+        },
+        {
+          name: 'securityAnswer',
+          type: 'text',
+          label: 'Resposta de Segurança',
+          placeholder: 'Digite uma resposta para sua pergunta',
+        },
       ],
       buttons: [
         {
@@ -221,6 +245,20 @@ export class LandingComponent implements OnInit {
           label: 'Confirme sua senha',
           placeholder: '12345678',
         },
+        {
+          name: 'securityQuestion',
+          type: 'dropdown',
+          label: 'Pergunta de Segurança',
+          placeholder: 'Escolha uma pergunta de segurança',
+          options: securityQuestions,
+          openDropdown: false,
+        },
+        {
+          name: 'securityAnswer',
+          type: 'text',
+          label: 'Resposta de Segurança',
+          placeholder: 'Digite uma resposta para sua pergunta',
+        },
       ],
       buttons: [
         {
@@ -241,6 +279,82 @@ export class LandingComponent implements OnInit {
         },
       ],
     },
+    'forgot-password': {
+      text: [
+        {
+          content:
+            'Por favor informe seu email para que possamos recuperar sua senha.',
+        },
+      ],
+      inputs: [
+        {
+          type: 'email',
+          label: 'Email',
+          placeholder: 'joao@exemplo.com',
+          name: 'email',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Continuar',
+          callback: () => this.requestChangePassword(),
+          classes: ['landing-button'],
+        },
+      ],
+      footer: [
+        {
+          content: '',
+          actionName: 'Voltar',
+          callback: () => this.changeStage('login'),
+        },
+      ],
+    },
+    'change-password': {
+      text: [
+        {
+          content:
+            'Por favor valide sua pergunta de segurança antes de realizar a troca de senha.',
+        },
+        {
+          content: 'PERGUNTA: ' + this.securityQuestion,
+          classes: ['bold-text'],
+        },
+      ],
+      inputs: [
+        {
+          name: 'securityAnswer',
+          type: 'text',
+          label: 'Resposta',
+          placeholder: 'Digite uma resposta para a pergunta',
+        },
+        {
+          name: 'password',
+          type: 'password',
+          label: 'Crie uma senha',
+          placeholder: '12345678',
+        },
+        {
+          name: 'confirmPassword',
+          type: 'password',
+          label: 'Confirme sua senha',
+          placeholder: '12345678',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Trocar senha',
+          callback: () => this.changePassword(),
+          classes: ['landing-button'],
+        },
+      ],
+      footer: [
+        {
+          content: '',
+          actionName: 'Voltar',
+          callback: () => this.changeStage('login'),
+        },
+      ],
+    },
   };
 
   loginFormGroup: FormGroup;
@@ -248,6 +362,8 @@ export class LandingComponent implements OnInit {
   registerAdminFormGroup: FormGroup;
   requestChangePasswordFormGroup: FormGroup;
   changePasswordFormGroup: FormGroup;
+
+  changePassEmail: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -261,6 +377,8 @@ export class LandingComponent implements OnInit {
         birthdate: ['', Validators.required],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', Validators.required],
+        securityQuestion: ['', Validators.required],
+        securityAnswer: ['', Validators.required],
       },
       { validator: this.passwordMatchValidator }
     );
@@ -270,6 +388,8 @@ export class LandingComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', Validators.required],
+        securityQuestion: ['', Validators.required],
+        securityAnswer: ['', Validators.required],
       },
       { validator: this.passwordMatchValidator }
     );
@@ -277,6 +397,17 @@ export class LandingComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
+    this.requestChangePasswordFormGroup = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+    });
+    this.changePasswordFormGroup = this.formBuilder.group(
+      {
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+        securityAnswer: ['', Validators.required],
+      },
+      { validator: this.passwordMatchValidator }
+    );
   }
 
   changeStage(nextStage: stage) {
@@ -313,23 +444,83 @@ export class LandingComponent implements OnInit {
     if (!this.formGroup.valid) {
       return;
     }
-    const { name, email, birthdate, password } = this.formGroup.getRawValue();
     if (registerType === 'voluntary') {
+      const {
+        name,
+        email,
+        birthdate,
+        password,
+        securityQuestion,
+        securityAnswer,
+      } = this.formGroup.getRawValue();
       const register$ = this.authService.registerVoluntary({
         name,
         email,
         birthdate,
         password,
+        securityQuestion,
+        securityAnswer,
       });
       const registrationFinish = await lastValueFrom(register$);
-      console.log({ registrationFinish });
+      this.registerVoluntaryFormGroup.reset();
     }
 
+    alert('Cadastro realizado com sucesso!');
     this.changeStage('login');
   }
 
   async login() {
     alert('I login!');
+  }
+
+  async requestChangePassword() {
+    this.formGroup.markAllAsTouched();
+    if (!this.formGroup.valid) {
+      return;
+    }
+    const { email } = this.formGroup.getRawValue();
+
+    try {
+      const changePassword$ = this.authService.requestChangePassword(email);
+      const requestChangeFinish: any = await lastValueFrom(changePassword$);
+      this.securityQuestion = requestChangeFinish.securityQuestion;
+      this.stages['change-password'].text[1].content =
+        'PERGUNTA: ' + this.securityQuestion;
+      this.changePassEmail = email;
+      this.requestChangePasswordFormGroup.reset();
+      this.changeStage('change-password');
+    } catch (err) {
+      console.error(err);
+      alert(
+        'Email inválido! Verifique se este email já está cadastrado no sistema.'
+      );
+    }
+  }
+
+  async changePassword() {
+    this.formGroup.markAllAsTouched();
+    if (!this.formGroup.valid) {
+      return;
+    }
+
+    const { password, securityAnswer } = this.formGroup.getRawValue();
+    const email = this.changePassEmail;
+    try {
+      const changePassword$ = this.authService.changePassword({
+        email,
+        password,
+        securityAnswer,
+      });
+      const changeFinish = await lastValueFrom(changePassword$);
+      this.changePasswordFormGroup.reset();
+      alert('Troca de senha realizada com sucesso!');
+      this.changeStage('login');
+    } catch (err) {
+      console.error(err);
+      alert(
+        'Dados inválidos! Verifique se a resposta para sua pergunta de segurança está correta.'
+      );
+    }
   }
 
   passwordMatchValidator(
@@ -347,5 +538,9 @@ export class LandingComponent implements OnInit {
     }
 
     return null;
+  }
+
+  selectItem(item: string, inputName: string): void {
+    this.formGroup.get(inputName).setValue(item);
   }
 }
