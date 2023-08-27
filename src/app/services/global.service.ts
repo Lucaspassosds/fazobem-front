@@ -6,7 +6,5 @@ import { User } from 'src/constants/interfaces';
 })
 export class GlobalService {
 
-  currentUser: User;
-
   constructor() { }
 }

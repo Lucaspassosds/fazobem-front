@@ -6,6 +6,7 @@ html {
   background-color: $primary-color;
   color: $font-color;
   height: 100%;
+  padding: 4%;
 }
 
 .bold-text {
@@ -15,4 +16,12 @@ html {
 .app-button {
   background-color: $font-color;
   color: $primary-color;
+}
+
+.app-button:hover {
+  border: 1px solid $font-color;
+}
+
+i {
+  font-size: 20px;
 }

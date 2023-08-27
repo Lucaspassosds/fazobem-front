@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CapacitorVaultService } from './capacitor-vault.service';
 import { environment } from 'src/environments/environment';
 import { tap } from 'rxjs';
+import { User } from 'src/constants/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -70,5 +71,9 @@ export class AuthenticationService {
       console.log('********* getAccessToken', { token });
       return token.accessToken;
     });
+  }
+
+  getCurrentUser(): Promise<User> {
+    return this.capacitorVaultService.getSession().then((session) => session.user);
   }
 }

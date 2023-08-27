@@ -11,10 +11,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component';
 import { CompanyListComponent } from './components/company-list/company-list.component';
 import { CompanyCreateComponent } from './components/company-create/company-create.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent, LandingComponent, NavigationMenuComponent, CompanyListComponent, CompanyCreateComponent],
-  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule, BrowserAnimationsModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthInterceptor, multi: true },

@@ -1,3 +1,10 @@
 <div id="navigation-menu">
-  <p>navigation-menu works!</p>
+  <button
+    class="btn app-button"
+    *ngFor="let routeOption of routeOptions"
+    (click)="navigateToRoute(routeOption.route)"
+  >
+    <i [class]="routeOption.icon"></i>
+    {{ routeOption.label }}
+  </button>
 </div>

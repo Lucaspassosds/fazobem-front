@@ -371,7 +371,6 @@ export class LandingComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthenticationService,
-    private globalService: GlobalService,
     private router: Router
   ) {}
   ngOnInit(): void {
@@ -485,8 +484,6 @@ export class LandingComponent implements OnInit {
     try {
       const login$ = this.authService.login({ email, password });
       const loginFinished: any = await lastValueFrom(login$);
-      const user: User = loginFinished.user;
-      this.globalService.currentUser = user;
       this.router.navigate(['routes']);
     } catch (err) {
       console.error(err);

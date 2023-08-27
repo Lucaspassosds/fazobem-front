@@ -23,7 +23,7 @@ export class UnauthInterceptor implements HttpInterceptor {
         (event: HttpEvent<any>) => {},
         (err: any) => {
           if (err instanceof HttpErrorResponse && err.status === 401) {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/']);
           }
         }
       )

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingComponent } from './components/landing/landing.component';
 import { NavigationMenuComponent } from './components/navigation-menu/navigation-menu.component';
+import { CompanyListComponent } from './components/company-list/company-list.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,14 @@ const routes: Routes = [
       routeId: 1,
       pageTitle: 'Navigation menu',
     },
+  },
+  {
+    path: 'company-list',
+    component: CompanyListComponent,
+    data: {
+      routeId: 2,
+      pageTitle: 'Company list'
+    }
   },
   { path: '**', redirectTo: '' },
 ];
