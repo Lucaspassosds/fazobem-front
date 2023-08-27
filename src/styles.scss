@@ -11,3 +11,8 @@ html {
 .bold-text {
   font-weight: 700;
 }
+
+.app-button {
+  background-color: $font-color;
+  color: $primary-color;
+}
