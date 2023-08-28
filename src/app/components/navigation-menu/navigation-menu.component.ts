@@ -61,4 +61,18 @@ export class NavigationMenuComponent implements OnInit {
     this.router.navigate([route]);
   }
 
+  logout() {
+    if (confirm('Tem certeza de que deseja sair?')) {
+      this.authService
+        .logout()
+        .toPromise()
+        .then(() => {
+          this.router.navigate(['']);
+        })
+        .catch((error: any) => {
+          throw new Error(error);
+        })
+    }
+  }
+
 }
