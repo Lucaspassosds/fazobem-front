@@ -39,12 +39,13 @@ export class AdminAuthGuard implements CanActivate {
     //   await this.authService.refreshSession();
     // }
     const authed = await this.authService.isAuthenticated();
+    console.log({ authed });
     // console.log('********', this.authService.getAuthResponse());
     return authed || this.routeToLogin();
   }
 
   private routeToLogin(): boolean {
-    this.router.navigate([`/landing`]);
+    this.router.navigate([`/`]);
     return false;
   }
 }

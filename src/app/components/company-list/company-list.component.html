@@ -1,1 +1,29 @@
-<p>company-list works!</p>
+<div id="company-list">
+  <div class="page-top">
+    <button
+      (click)="navigateToCompanyCreate()"
+      [attr.data-test]="'create-company-button'"
+      mat-raised-button
+      class="btn app-button"
+    >
+      Adicionar organização
+    </button>
+    <span class="bold-text" style="cursor: pointer;" (click)="navigateBack()">Voltar</span>
+  </div>
+  <app-table
+    *ngIf="isReady && displayCompanies.length; else no_orgs"
+    [displayNames]="['Nome da organização', 'Administradores ativos']"
+    [fieldNames]="['name', 'admins']"
+    [hasCounter]="true"
+    [isEditable]="true"
+    [rows]="displayCompanies"
+    [editRoute]="'company-create'"
+    editOrDeleteIdFiledName="organizationId"
+    [isDeletable]="true"
+    (deleteEventEmitter)="deleteOrganization($event)"
+  >
+  </app-table>
+  <ng-template #no_orgs>
+    <p>Nenhuma organização encontrada! Por favor cadastre uma organização através do botão acima.</p>
+  </ng-template>
+</div>

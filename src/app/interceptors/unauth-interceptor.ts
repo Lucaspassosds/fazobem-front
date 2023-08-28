@@ -22,7 +22,7 @@ export class UnauthInterceptor implements HttpInterceptor {
       tap(
         (event: HttpEvent<any>) => {},
         (err: any) => {
-          if (err instanceof HttpErrorResponse && err.status === 401) {
+          if (err instanceof HttpErrorResponse && [401, 403].includes(err.status)) {
             this.router.navigate(['/']);
           }
         }

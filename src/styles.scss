@@ -25,3 +25,41 @@ html {
 i {
   font-size: 20px;
 }
+
+.search-bar {
+  position: relative;
+  width: 100%;
+}
+
+.search-bar i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #aebede;
+}
+
+.search-bar input {
+  padding: 12px 15px;
+  padding-left: 30px; /* Adjust this value based on the icon size */
+  border-radius: 8px;
+  border: 2px solid var(--neutral-300, #aebede);
+  background: var(--base-white, #fff);
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  width: 100%;
+}
+
+.search-bar input::placeholder {
+  color: #aebede;
+}
+
+
+.page-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}

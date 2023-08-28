@@ -13,3 +13,27 @@ export enum UserRole {
   systemAdmin = 'system-admin',
   noRole = 'no-role',
 }
+
+export interface BaseTable {
+  id: string;
+  isDeleted: boolean;
+  autoCreateTs: string;
+  autoUpdateTs: string;
+  deletedTs: string;
+  createdBy: string;
+  modifiedBy: string;
+  deletedBy: string;
+}
+
+export interface Organization extends BaseTable {
+  name: string;
+  admins?: number;
+  organizationAdmin: OrganizationAdmin[];
+}
+
+export interface OrganizationAdmin extends BaseTable {
+  organizationId: string;
+  isRegistered: boolean;
+  user?: User;
+}
+

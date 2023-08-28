@@ -24,6 +24,7 @@
     "@capacitor/core": "latest",
     "@capacitor/preferences": "^5.0.6",
     "bootstrap": "^5.3.1",
+    "ngx-mask": "^13.1.15",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
