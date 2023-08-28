@@ -467,6 +467,18 @@ export class LandingComponent implements OnInit {
       });
       const registrationFinish = await lastValueFrom(register$);
       this.registerVoluntaryFormGroup.reset();
+    } else {
+      const { name, email, password, securityQuestion, securityAnswer } =
+        this.formGroup.getRawValue();
+      const register$ = this.authService.registerAdmin({
+        name,
+        email,
+        password,
+        securityQuestion,
+        securityAnswer,
+      });
+      const registrationFinish = await lastValueFrom(register$);
+      this.registerAdminFormGroup.reset();
     }
 
     alert('Cadastro realizado com sucesso!');

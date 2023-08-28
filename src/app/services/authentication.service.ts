@@ -48,9 +48,15 @@ export class AuthenticationService {
     return this.http.post(`${environment.apiUrl}/auth/change-password`, body);
   }
 
-  registerAdmin(body: { email: string; name: string; password: string }) {
+  registerAdmin(body: {
+    email: string;
+    name: string;
+    password: string;
+    securityQuestion: string;
+    securityAnswer: string;
+  }) {
     return this.http.post(
-      `${environment.apiUrl}/auth/admins/complete-register`,
+      `${environment.apiUrl}/auth/admins/register`,
       body
     );
   }
