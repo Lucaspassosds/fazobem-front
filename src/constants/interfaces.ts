@@ -48,3 +48,8 @@ export interface Location extends BaseTable {
   description: string;
   organizationId: string;
 }
+
+export interface VoluntaryRole extends BaseTable {
+  name: string;
+  description: string;
+}

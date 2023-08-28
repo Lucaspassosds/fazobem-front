@@ -5,6 +5,7 @@ import {
   Location,
   Organization,
   OrganizationAdmin,
+  VoluntaryRole,
 } from 'src/constants/interfaces';
 import { environment } from 'src/environments/environment';
 
@@ -100,6 +101,43 @@ export class AdminService {
   ) {
     return this.http.patch<Location>(
       `${environment.apiUrl}/location/${locationId}`,
+      body
+    );
+  }
+  rolesGet() {
+    return this.http.get<VoluntaryRole[]>(
+      `${environment.apiUrl}/voluntary-role`
+    );
+  }
+
+  roleDelete(roleId: string) {
+    return this.http.delete<VoluntaryRole>(
+      `${environment.apiUrl}/voluntary-role/${roleId}`
+    );
+  }
+
+  roleGetSingle(roleId: string): Observable<VoluntaryRole> {
+    return this.http.get<VoluntaryRole>(
+      `${environment.apiUrl}/voluntary-role/${roleId}`
+    );
+  }
+
+  roleCreate(body: { name: string; description: string }) {
+    return this.http.post<VoluntaryRole>(
+      `${environment.apiUrl}/voluntary-role`,
+      body
+    );
+  }
+
+  roleUpdate(
+    body: {
+      name: string;
+      description: string;
+    },
+    roleId: string
+  ) {
+    return this.http.patch<VoluntaryRole>(
+      `${environment.apiUrl}/voluntary-role/${roleId}`,
       body
     );
   }
