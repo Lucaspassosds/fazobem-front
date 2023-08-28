@@ -1,3 +1,15 @@
 <div id="navigation-menu">
-  <p>navigation-menu works!</p>
+  <h4>Menu</h4>
+  <button
+    class="btn app-button"
+    *ngFor="let routeOption of routeOptions"
+    (click)="navigateToRoute(routeOption.route)"
+  >
+    <i [class]="routeOption.icon"></i>
+    {{ routeOption.label }}
+  </button>
+  <button class="btn btn-danger" (click)="logout()">
+    <i class="ph ph-sign-out"></i>
+    Sair
+  </button>
 </div>

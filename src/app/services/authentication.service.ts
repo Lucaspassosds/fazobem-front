@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CapacitorVaultService } from './capacitor-vault.service';
 import { environment } from 'src/environments/environment';
-import { tap } from 'rxjs';
+import { defer, from, switchMap, tap } from 'rxjs';
+import { User } from 'src/constants/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -47,9 +48,15 @@ export class AuthenticationService {
     return this.http.post(`${environment.apiUrl}/auth/change-password`, body);
   }
 
-  registerAdmin(body: { email: string; name: string; password: string }) {
+  registerAdmin(body: {
+    email: string;
+    name: string;
+    password: string;
+    securityQuestion: string;
+    securityAnswer: string;
+  }) {
     return this.http.post(
-      `${environment.apiUrl}/auth/admins/complete-register`,
+      `${environment.apiUrl}/auth/admins/register`,
       body
     );
   }
@@ -65,10 +72,26 @@ export class AuthenticationService {
       );
   }
 
+  logout() {
+    return this.http
+      .post(`${environment.apiUrl}/auth/logout`, {})
+      .pipe(
+        switchMap(() =>
+          defer(() => from(this.capacitorVaultService.clearSession()))
+        )
+      );
+  }
+
   getAccessToken() {
     return this.capacitorVaultService.getSession().then((token) => {
       console.log('********* getAccessToken', { token });
       return token.accessToken;
     });
+  }
+
+  getCurrentUser(): Promise<User> {
+    return this.capacitorVaultService
+      .getSession()
+      .then((session) => session.user);
   }
 }

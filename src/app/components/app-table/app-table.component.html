@@ -1,0 +1,248 @@
+<div *ngIf="isReady" class="super-user-lists-container" id="app-table">
+  <div *ngIf="hasSearchBar" class="table-top">
+    <div class="search-bar" style="max-width: 356px">
+      <i class="ph ph-magnifying-glass"></i>
+      <input
+        class="form-control"
+        type="text"
+        [placeholder]="searchBarPlaceholder"
+        (keyup)="searchTerm.next($any($event.target).value)"
+      />
+    </div>
+    <div class="table-actions" *ngIf="topIconList?.list?.length">
+      <i
+        *ngFor="let icon of topIconList.list"
+        [ngClass]="icon.iconName"
+        [attr.data-test]="'top-icon-' + icon.name"
+        (click)="
+          icon.selectionExclusive
+            ? selection.selected.length
+              ? icon.callback(selection.selected)
+              : alert('Please make a selection first')
+            : icon.callback()
+        "
+      ></i>
+    </div>
+  </div>
+  <mat-table
+    #appTable
+    [dataSource]="dataSource"
+    matSort
+    [matSortActive]="defaultSortColumn"
+    matSortDirection="asc"
+    (matSortChange)="announceSortChange($event)"
+    [attr.data-test]="tableId"
+  >
+    <ng-container matColumnDef="select" *ngIf="isSelectable">
+      <th mat-header-cell *matHeaderCellDef style="border: unset">
+        <mat-checkbox
+          (change)="$event ? masterToggle() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+        >
+        </mat-checkbox>
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let row; let i = index"
+        style="border: unset; padding: 13px 0px 13px 16px"
+      >
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)"
+          [attr.data-test]="'table-check-' + i"
+        >
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="counter" *ngIf="hasCounter">
+      <mat-header-cell *matHeaderCellDef style="max-width: 70px; flex: unset"
+        >Nº.</mat-header-cell
+      >
+      <mat-cell *matCellDef="let element; let i = index" style="flex: unset">{{
+        i + 1
+      }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="edit" *ngIf="isEditable">
+      <mat-header-cell
+        *matHeaderCellDef
+        style="min-width: 60px; max-width: 60px"
+      ></mat-header-cell>
+      <mat-cell
+        *matCellDef="let row; let i = index"
+        style="min-width: 60px; max-width: 60px"
+      >
+        <i
+          style="cursor: pointer; font-size: 20px;"
+          class="ph ph-pencil-simple-line"
+          [attr.data-test]="'edit-icon-' + i"
+          (click)="
+            !customEditEvent
+              ? navigateToId(row[editOrDeleteIdFiledName])
+              : emitEditEvent($event, i)
+          "
+        ></i>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete" *ngIf="isDeletable">
+      <mat-header-cell
+        *matHeaderCellDef
+        style="max-width: 60px"
+      ></mat-header-cell>
+      <mat-cell *matCellDef="let row; let i = index" style="max-width: 60px">
+        <i
+          style="cursor: pointer; font-size: 20px;"
+          class="ph ph-trash"
+          [attr.data-test]="'delete-icon-' + i"
+          (click)="emitDeleteEvent($event, i)"
+        ></i>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container
+      *ngFor="let fieldName of fieldNames; let i = index"
+      matColumnDef="{{ fieldName }}"
+    >
+      <mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        [attr.data-test]="'header-' + fieldName"
+      >
+        {{ displayNames[i] }}
+      </mat-header-cell>
+      <mat-cell
+        *matCellDef="let row; let i = index"
+        [ngStyle]="{
+          'justify-content':
+            fieldName === 'actions' ? 'space-between' : 'inherit'
+        }"
+      >
+        <ng-container
+          *ngIf="toggleableFields.includes(fieldName); else checkIconList"
+        >
+          <mat-slide-toggle
+            [attr.data-test]="'toggle-' + fieldName + '-' + i"
+            color="primary"
+            [checked]="row[fieldName]"
+            (click)="toggleEvent($event, i)"
+          >
+          </mat-slide-toggle>
+        </ng-container>
+        <ng-template #checkIconList>
+          <ng-container
+            *ngIf="getIconListByName(fieldName); else checkChipList"
+          >
+            <div class="icon-list">
+              <div
+                class="icon-container"
+                *ngFor="let icon of getIconListByName(fieldName).list"
+                [matTooltip]="icon.tooltip"
+              >
+                <ng-container *ngIf="filterIconList(row, icon)">
+                  <i
+                    (click)="icon.callback(row)"
+                    [attr.data-test]="'icon-' + icon.name + '-' + i"
+                    [class]="icon.iconName"
+                  ></i>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </ng-template>
+        <ng-template #checkChipList>
+          <ng-container
+            *ngIf="getChipFieldByName(fieldName); else checkNameAndFunctionList"
+          >
+            <div class="chips">
+              <ng-container
+                *ngFor="let splitName of getSplittedNames(row[fieldName])"
+              >
+                <div
+                  [class]="
+                    'chip ' +
+                    getChipFieldByName(fieldName).colorCallback(row[fieldName])
+                  "
+                  *ngIf="splitName"
+                >
+                  <i
+                    [class]="
+                      getChipFieldByName(fieldName).iconCallback(row[fieldName])
+                    "
+                    *ngIf="
+                      getChipFieldByName(fieldName).iconCallback(row[fieldName])
+                    "
+                  ></i>
+                  <span>{{ splitName }}</span>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </ng-template>
+        <ng-template #checkNameAndFunctionList>
+          <ng-container
+            *ngIf="nameAndFunctionFields.includes(fieldName); else noActions"
+          >
+            <div class="name-and-function">
+              <span class="table-line-text" *ngIf="row[fieldName].name">
+                {{ row[fieldName].name }}
+              </span>
+              <span
+                class="table-line-text blue-text"
+                *ngIf="row[fieldName].function"
+                (click)="row[fieldName].function.callback()"
+                style="cursor: pointer"
+                [attr.data-test]="
+                  'function-' + i + '-' + row[fieldName].function.name
+                "
+                [attr.data-row]="i"
+              >
+                {{ row[fieldName].function.name }}
+              </span>
+            </div>
+          </ng-container>
+        </ng-template>
+        <ng-template #noActions>
+          <div
+            (click)="
+              customFieldActions[fieldName]
+                ? userActions.includes(fieldName)
+                  ? customFieldActions[fieldName](row['id'])
+                  : customFieldActions[fieldName](row[fieldName])
+                : null
+            "
+            [ngClass]="customFieldActions[fieldName] ? 'clickable-text' : null"
+          >
+            <ng-container *ngIf="fieldName === 'phone'; else not_phone">
+              <div
+                [ngClass]="customFieldClasses[fieldName]"
+                class="bold-line-text"
+              >
+                {{
+                  (row[fieldName] || "").replace("+1", "")
+                    | mask : "(000) 000-0000"
+                }}
+              </div>
+            </ng-container>
+            <ng-template #not_phone>
+              <div
+                [innerHTML]="row[fieldName]"
+                [ngClass]="customFieldClasses[fieldName]"
+                [attr.data-test]="'cell-' + fieldName + '-' + i"
+                class="bold-line-text"
+              ></div>
+            </ng-template>
+          </div>
+        </ng-template>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="fieldNamesPlus"></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: fieldNamesPlus; let i = index"
+    ></mat-row>
+  </mat-table>
+</div>

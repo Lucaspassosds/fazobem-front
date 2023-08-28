@@ -4,5 +4,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  gap: 16px;
   height: 100%;
+  width: 100%;
+}
+
+button {
+  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+@media screen and (max-width: 960px) {
+  button {
+    width: 100%;
+  }
 }

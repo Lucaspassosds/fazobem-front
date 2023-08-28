@@ -1,1 +1,116 @@
-<p>company-create works!</p>
+<div id="company-create" *ngIf="isReady">
+  <div class="page-top">
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <form [formGroup]="formGroup" class="needs-validation">
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="name-label">Nome</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="name"
+        placeholder="Insira o nome da organização"
+        [attr.aria-label]="'Insira o nome da organização'"
+        [attr.aria-describedby]="'name-label'"
+        required
+        [ngClass]="
+          formGroup.get('name').touched
+            ? formGroup.get('name').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+
+    <button type="submit" class="btn app-button" (click)="submitOrganization()">
+      {{ buttonNaming }}
+    </button>
+  </form>
+  <div class="invited-admins" *ngIf="organizationId">
+    <h5>Administradores da organização</h5>
+    <hr />
+    <button
+      class="btn app-button mb-3"
+      type="button"
+      data-toggle="modal"
+      data-target="#inviteAdminModal"
+      (click)="openAdminModal()"
+    >
+      Convidar administrador
+    </button>
+    <app-table
+      [displayNames]="['Administrador', 'Status']"
+      [fieldNames]="['name', 'status']"
+      [hasCounter]="true"
+      [isEditable]="false"
+      [rows]="displayAdmins"
+      [isDeletable]="true"
+      (deleteEventEmitter)="removeAdmin($event)"
+      *ngIf="displayAdmins.length"
+    >
+    </app-table>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  tabindex="-1"
+  id="inviteAdminModal"
+  role="dialog"
+  aria-labelledby="modalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" *ngIf="isReady">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Convidar administrador</h5>
+        <button
+          class="btn close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="adminModal.hide()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" [formGroup]="modalFormGroup">
+        <div class="input-group has-validation mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="email-label">Email</span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="adminEmail"
+            placeholder="Email do administrador"
+            [attr.aria-label]="'Email do administrador'"
+            [attr.aria-describedby]="'email-label'"
+            required
+            [ngClass]="
+              modalFormGroup.get('adminEmail').touched
+                ? modalFormGroup.get('adminEmail').errors
+                  ? 'is-invalid'
+                  : 'is-valid'
+                : ''
+            "
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn app-button" (click)="inviteAdmin()">Convidar</button>
+        <button
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="adminModal.hide()"
+        >
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

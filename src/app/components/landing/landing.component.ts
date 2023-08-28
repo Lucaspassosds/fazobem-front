@@ -371,7 +371,6 @@ export class LandingComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthenticationService,
-    private globalService: GlobalService,
     private router: Router
   ) {}
   ngOnInit(): void {
@@ -468,6 +467,18 @@ export class LandingComponent implements OnInit {
       });
       const registrationFinish = await lastValueFrom(register$);
       this.registerVoluntaryFormGroup.reset();
+    } else {
+      const { name, email, password, securityQuestion, securityAnswer } =
+        this.formGroup.getRawValue();
+      const register$ = this.authService.registerAdmin({
+        name,
+        email,
+        password,
+        securityQuestion,
+        securityAnswer,
+      });
+      const registrationFinish = await lastValueFrom(register$);
+      this.registerAdminFormGroup.reset();
     }
 
     alert('Cadastro realizado com sucesso!');
@@ -485,8 +496,6 @@ export class LandingComponent implements OnInit {
     try {
       const login$ = this.authService.login({ email, password });
       const loginFinished: any = await lastValueFrom(login$);
-      const user: User = loginFinished.user;
-      this.globalService.currentUser = user;
       this.router.navigate(['routes']);
     } catch (err) {
       console.error(err);
