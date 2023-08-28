@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Organization, OrganizationAdmin } from 'src/constants/interfaces';
+import {
+  Location,
+  Organization,
+  OrganizationAdmin,
+} from 'src/constants/interfaces';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -51,6 +55,52 @@ export class AdminService {
   removeAdmin(organizationAdminId: string) {
     return this.http.delete<OrganizationAdmin>(
       `${environment.apiUrl}/organization-admin/${organizationAdminId}`
+    );
+  }
+
+  locationsGet() {
+    return this.http.get<Location[]>(`${environment.apiUrl}/location`);
+  }
+
+  locationDelete(locationId: string) {
+    return this.http.delete<Location>(
+      `${environment.apiUrl}/location/${locationId}`
+    );
+  }
+
+  locationGetSingle(locationId: string): Observable<Location> {
+    return this.http.get<Location>(
+      `${environment.apiUrl}/location/${locationId}`
+    );
+  }
+
+  locationCreate(body: {
+    name: string;
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    description: string;
+    organizationId: string;
+  }) {
+    return this.http.post<Location>(`${environment.apiUrl}/location`, body);
+  }
+
+  locationUpdate(
+    body: {
+      name: string;
+      addressLine1: string;
+      addressLine2: string;
+      city: string;
+      state: string;
+      description: string;
+      organizationId: string;
+    },
+    locationId: string
+  ) {
+    return this.http.patch<Location>(
+      `${environment.apiUrl}/location/${locationId}`,
+      body
     );
   }
 }

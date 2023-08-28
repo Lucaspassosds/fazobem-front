@@ -5,6 +5,7 @@ export interface User {
   role: UserRole;
   securityQuestion?: string;
   securityAnswer?: string;
+  organizationAdmin?: OrganizationAdmin;
 }
 
 export enum UserRole {
@@ -37,3 +38,13 @@ export interface OrganizationAdmin extends BaseTable {
   user?: User;
 }
 
+export interface Location extends BaseTable {
+  name: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  description: string;
+  organizationId: string;
+}

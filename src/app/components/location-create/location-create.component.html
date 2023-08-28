@@ -1,1 +1,151 @@
-<p>location-create works!</p>
+<div id="location-create" *ngIf="isReady">
+  <div class="page-top">
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <form [formGroup]="formGroup" class="needs-validation">
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="name-label">Nome</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="name"
+        placeholder="Insira o nome da localidade"
+        [attr.aria-label]="'Insira o nome da localidade'"
+        [attr.aria-describedby]="'name-label'"
+        required
+        [ngClass]="
+          formGroup.get('name').touched
+            ? formGroup.get('name').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="addressLine1-label">Endereço</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="addressLine1"
+        placeholder="Endereço"
+        [attr.aria-label]="'Endereço'"
+        [attr.aria-describedby]="'addressLine1-label'"
+        required
+        [ngClass]="
+          formGroup.get('addressLine1').touched
+            ? formGroup.get('addressLine1').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="addressLine2-label"
+          >Complemento</span
+        >
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="addressLine2"
+        placeholder="Complemento"
+        [attr.aria-label]="'Complemento'"
+        [attr.aria-describedby]="'addressLine2-label'"
+        required
+        [ngClass]="
+          formGroup.get('addressLine2').touched
+            ? formGroup.get('addressLine2').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="city-label">Cidade</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="city"
+        placeholder="Cidade"
+        [attr.aria-label]="'Cidade'"
+        [attr.aria-describedby]="'city-label'"
+        required
+        [ngClass]="
+          formGroup.get('city').touched
+            ? formGroup.get('city').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+    <div class="input-group has-validation mb-3">
+      <div class="dropdown" style="width: 100%;">
+        <button
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          (click)="openDropdown = !openDropdown"
+          style="width: 100%; text-align: left;"
+        >
+          {{ formGroup.get('state').value || 'Estado' }}
+        </button>
+        <div
+          class="dropdown-menu"
+          aria-labelledby="dropdownMenuButton"
+          [ngStyle]="{ display: openDropdown ? 'block' : 'none' }"
+        >
+          <a
+            *ngFor="let option of brazilStates"
+            class="dropdown-item"
+            href="#"
+            (click)="
+              selectItem(option, 'state'); openDropdown = false
+            "
+            >{{ option }}</a
+          >
+        </div>
+      </div>
+    </div>
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="description">Descrição</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="description"
+        placeholder="Descrição"
+        [attr.aria-label]="'Descrição'"
+        [attr.aria-describedby]="'description'"
+        required
+        [ngClass]="
+          formGroup.get('description').touched
+            ? formGroup.get('description').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+
+    <button type="submit" class="btn app-button" (click)="submitLocation()">
+      {{ buttonNaming }}
+    </button>
+  </form>
+</div>
