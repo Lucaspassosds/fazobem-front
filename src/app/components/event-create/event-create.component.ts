@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DateTime } from 'luxon';
 import { lastValueFrom } from 'rxjs';
 import { AdminService } from 'src/app/services/admin.service';
 import {
@@ -34,6 +35,8 @@ export class EventCreateComponent {
 
   shiftsModal: any;
 
+  displayShifts: any[];
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -64,6 +67,17 @@ export class EventCreateComponent {
       event = await lastValueFrom(eventGet$);
       this.event = event as OrganizationEvent;
       this.isPublished = event.isPublished;
+
+      this.displayShifts = event.shifts.map((shift) => ({
+        voluntaryRole: shift.voluntaryRole.name,
+        startTime: DateTime.fromFormat(shift.startTime, 'HH:mm:ss').toFormat(
+          'HH:mm'
+        ),
+        endTime: DateTime.fromFormat(shift.endTime, 'HH:mm:ss').toFormat(
+          'HH:mm'
+        ),
+        positionsFilled: `${shift.voluntaryShift.length}/${shift.quantityNeeded}`,
+      }));
     }
     this.formGroup = this.formBuider.group({
       name: [event.name || '', Validators.required],
@@ -85,6 +99,12 @@ export class EventCreateComponent {
     });
 
     this.isReady = true;
+  }
+
+  async publishEvent() {
+    const publishEvent$ = this.adminService.publishEvent(this.eventId);
+    const eventPublished = await lastValueFrom(publishEvent$);
+    this.sharedInfo();
   }
 
   navigateBack() {
@@ -116,11 +136,12 @@ export class EventCreateComponent {
       if (this.eventId) {
         const eventUpdate$ = this.adminService.eventUpdate(body, this.eventId);
         const updatedLoc = await lastValueFrom(eventUpdate$);
+        this.router.navigate(['event-list']);
       } else {
         const eventCreate$ = this.adminService.eventCreate(body);
         const createdLoc = await lastValueFrom(eventCreate$);
+        this.router.navigate(['event-create', createdLoc.id]);
       }
-      this.router.navigate(['event-list']);
     } catch (err) {
       console.error(err);
       alert('Não foi possível criar o evento.');
@@ -170,6 +191,17 @@ export class EventCreateComponent {
     }
   }
 
+  async removeShift({ rowIndex }: { rowIndex: number }) {
+    const shift = this.displayShifts[rowIndex];
+
+    if (confirm('Tem certeza de que deseja remover esta tarefa?')) {
+      const shiftRemoved$ = this.adminService.shiftDelete(shift.id);
+      const removeCompleted = await lastValueFrom(shiftRemoved$);
+
+      this.sharedInfo();
+    }
+  }
+
   get buttonNaming() {
     return this.eventId ? 'Editar evento' : 'Criar evento';
   }
@@ -196,5 +228,9 @@ export class EventCreateComponent {
 
   openModal() {
     this.shiftsModal.show();
+  }
+
+  get checkButtonDisabled() {
+    return this.event?.shifts?.length === 0 || this.event?.isPublished;
   }
 }

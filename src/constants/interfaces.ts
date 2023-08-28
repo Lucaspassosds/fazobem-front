@@ -47,6 +47,7 @@ export interface Location extends BaseTable {
   zipcode: string;
   description: string;
   organizationId: string;
+  organizationEvents?: OrganizationEvent[];
 }
 
 export interface VoluntaryRole extends BaseTable {
@@ -75,4 +76,14 @@ export interface Shift extends BaseTable {
   otherInfo: string;
   voluntaryRoleId: string;
   organizationEventId: string;
+  voluntaryRole?: VoluntaryRole;
+  voluntaryShift?: VoluntaryShift[];
+}
+
+export interface VoluntaryShift extends BaseTable {
+  isConfirmed: boolean;
+  signUpTime: string;
+  confirmTime: string;
+  voluntaryId: string;
+  shiftId: string;
 }

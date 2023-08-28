@@ -39,6 +39,8 @@ export class EventListComponent {
           eventDate: DateTime.fromISO(event.eventDate).toFormat('dd/MM/yyyy'),
           isPublished: event.isPublished ? 'Sim' : 'Não',
           description: event.description,
+          shiftCount: event.shifts.length,
+          shifts: event.shifts,
         }));
         this.isReady = true;
       });
@@ -53,7 +55,14 @@ export class EventListComponent {
   }
 
   async deleteEvent({ rowIndex }: { rowIndex: number }) {
-    const { eventId } = this.displayEvents[rowIndex];
+    const { eventId, shifts } = this.displayEvents[rowIndex];
+
+    if (shifts.length) {
+      alert(
+        'Não é possível remover este evento pois ele já possui tarefas atribuídas. Por favor, remova as tarefas primeiro.'
+      );
+      return;
+    }
 
     if (confirm('Tem certeza de que quer remover este evento?')) {
       const deleteOrg$ = this.adminService.eventDelete(eventId);

@@ -6,6 +6,7 @@ import {
   Organization,
   OrganizationAdmin,
   OrganizationEvent,
+  Shift,
   VoluntaryRole,
 } from 'src/constants/interfaces';
 import { environment } from 'src/environments/environment';
@@ -189,6 +190,13 @@ export class AdminService {
     );
   }
 
+  publishEvent(eventId: string) {
+    return this.http.patch<OrganizationEvent>(
+      `${environment.apiUrl}/organization-event/publish/${eventId}`,
+      {}
+    );
+  }
+
   shiftCreate(body: {
     startTime: string;
     endTime: string;
@@ -201,9 +209,10 @@ export class AdminService {
     voluntaryRoleId: string;
     organizationEventId: string;
   }) {
-    return this.http.post<OrganizationEvent>(
-      `${environment.apiUrl}/shift`,
-      body
-    );
+    return this.http.post<Shift>(`${environment.apiUrl}/shift`, body);
+  }
+
+  shiftDelete(shiftId: string) {
+    return this.http.delete<Shift>(`${environment.apiUrl}/shift/${shiftId}`);
   }
 }

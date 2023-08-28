@@ -36,6 +36,7 @@ export class LocationListComponent implements OnInit {
           name: location.name,
           address: formatAddress(location),
           description: location.description,
+          events: location.organizationEvents,
         }));
         this.isReady = true;
       });
@@ -50,7 +51,14 @@ export class LocationListComponent implements OnInit {
   }
 
   async deleteLocation({ rowIndex }: { rowIndex: number }) {
-    const { locationId } = this.displayLocations[rowIndex];
+    const { locationId, events } = this.displayLocations[rowIndex];
+
+    if (events.length) {
+      alert(
+        'Não é possível remover esta localidade pois ela já possui eventos cadastrados. Por favor, remova os eventos primeiro.'
+      );
+      return;
+    }
 
     if (confirm('Tem certeza de que quer remover esta localidade?')) {
       const deleteOrg$ = this.adminService.locationDelete(locationId);

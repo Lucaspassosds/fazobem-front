@@ -5,7 +5,10 @@
     >
     <button
       class="btn btn-light"
-      [disabled]="event.shifts.length === 0 || event.isPublished"
+      [disabled]="
+        checkButtonDisabled
+      "
+      (click)="publishEvent()"
     >
       Publicar
     </button>
@@ -124,17 +127,17 @@
     >
       Criar tarefa
     </button>
-    <!-- <app-table
-      [displayNames]="['Administrador', 'Status']"
-      [fieldNames]="['name', 'status']"
+    <app-table
+      [displayNames]="['Papel', 'Hora de início', 'Hora de término', 'Inscrições']"
+      [fieldNames]="['voluntaryRole', 'startTime', 'endTime', 'positionsFilled']"
       [hasCounter]="true"
       [isEditable]="false"
-      [rows]="displayAdmins"
+      [rows]="displayShifts"
       [isDeletable]="true"
-      (deleteEventEmitter)="removeAdmin($event)"
-      *ngIf="displayAdmins.length"
+      (deleteEventEmitter)="removeShift($event)"
+      *ngIf="displayShifts.length"
     >
-    </app-table> -->
+    </app-table>
   </div>
 </div>
 
