@@ -35,7 +35,11 @@ export class EventCreateComponent {
 
   shiftsModal: any;
 
+  shifts: Shift[];
+
   displayShifts: any[];
+
+  editShiftId = '';
 
   constructor(
     private router: Router,
@@ -67,8 +71,9 @@ export class EventCreateComponent {
       event = await lastValueFrom(eventGet$);
       this.event = event as OrganizationEvent;
       this.isPublished = event.isPublished;
-
+      this.shifts = event.shifts;
       this.displayShifts = event.shifts.map((shift) => ({
+        shiftId: shift.id,
         voluntaryRole: shift.voluntaryRole.name,
         startTime: DateTime.fromFormat(shift.startTime, 'HH:mm:ss').toFormat(
           'HH:mm'
@@ -181,8 +186,16 @@ export class EventCreateComponent {
     };
 
     try {
-      const shiftCreate$ = this.adminService.shiftCreate(body);
-      const shiftCreated = await lastValueFrom(shiftCreate$);
+      if (this.editShiftId) {
+        const shiftUpdate$ = this.adminService.shiftUpdate(
+          body,
+          this.editShiftId
+        );
+        const shiftUpdated = await lastValueFrom(shiftUpdate$);
+      } else {
+        const shiftCreate$ = this.adminService.shiftCreate(body);
+        const shiftCreated = await lastValueFrom(shiftCreate$);
+      }
       this.shiftsModal.hide();
       this.sharedInfo();
     } catch (err) {
@@ -195,7 +208,7 @@ export class EventCreateComponent {
     const shift = this.displayShifts[rowIndex];
 
     if (confirm('Tem certeza de que deseja remover esta tarefa?')) {
-      const shiftRemoved$ = this.adminService.shiftDelete(shift.id);
+      const shiftRemoved$ = this.adminService.shiftDelete(shift.shiftId);
       const removeCompleted = await lastValueFrom(shiftRemoved$);
 
       this.sharedInfo();
@@ -207,7 +220,7 @@ export class EventCreateComponent {
   }
 
   get publishButtonNaming() {
-    return this.eventId ? 'Editar evento' : 'Criar evento';
+    return !this.event?.isPublished ? 'Publicar' : 'Publicado';
   }
 
   selectItem(item: string, inputName: string, fromModal = false): void {
@@ -226,11 +239,50 @@ export class EventCreateComponent {
     return this.roles.map((role) => role.name);
   }
 
-  openModal() {
+  openModal({ rowIndex }: { rowIndex?: number } = {}) {
+    if (typeof rowIndex === 'number' && !isNaN(rowIndex)) {
+      const {
+        voluntaryRole: { name: voluntaryRole },
+        staffingManagerEmail,
+        staffingManagerName,
+        staffingManagerPhoneNumber,
+        startTime,
+        endTime,
+        jobRequirements,
+        otherInfo,
+        quantityNeeded,
+        id,
+      } = this.shifts.find(
+        (shift) => shift.id === this.displayShifts[rowIndex].shiftId
+      );
+      this.editShiftId = id;
+      this.modalFormGroup.patchValue({
+        staffingManagerEmail,
+        staffingManagerName,
+        staffingManagerPhoneNumber,
+        startTime,
+        endTime,
+        jobRequirements,
+        otherInfo,
+        quantityNeeded,
+        voluntaryRole,
+      });
+    } else {
+      this.editShiftId = '';
+    }
+
     this.shiftsModal.show();
   }
 
   get checkButtonDisabled() {
     return this.event?.shifts?.length === 0 || this.event?.isPublished;
+  }
+
+  get modalTitle() {
+    return !this.editShiftId ? 'Criar tarefa' : 'Editar tarefa';
+  }
+
+  get modalButtonNaming() {
+    return !this.editShiftId ? 'Criar' : 'Editar';
   }
 }

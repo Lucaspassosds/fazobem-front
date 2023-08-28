@@ -5,12 +5,10 @@
     >
     <button
       class="btn btn-light"
-      [disabled]="
-        checkButtonDisabled
-      "
+      [disabled]="checkButtonDisabled"
       (click)="publishEvent()"
     >
-      Publicar
+      {{ publishButtonNaming }}
     </button>
   </div>
   <form [formGroup]="formGroup" class="needs-validation">
@@ -128,13 +126,25 @@
       Criar tarefa
     </button>
     <app-table
-      [displayNames]="['Papel', 'Hora de início', 'Hora de término', 'Inscrições']"
-      [fieldNames]="['voluntaryRole', 'startTime', 'endTime', 'positionsFilled']"
+      [displayNames]="[
+        'Papel',
+        'Hora de início',
+        'Hora de término',
+        'Inscrições'
+      ]"
+      [fieldNames]="[
+        'voluntaryRole',
+        'startTime',
+        'endTime',
+        'positionsFilled'
+      ]"
       [hasCounter]="true"
-      [isEditable]="false"
+      [isEditable]="true"
       [rows]="displayShifts"
       [isDeletable]="true"
+      [customEditEvent]="true"
       (deleteEventEmitter)="removeShift($event)"
+      (editEventEmitter)="openModal($event)"
       *ngIf="displayShifts.length"
     >
     </app-table>
@@ -152,7 +162,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content" *ngIf="isReady">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Criar tarefa</h5>
+        <h5 class="modal-title" id="modalLabel">{{ modalTitle }}</h5>
         <button
           class="btn close"
           data-dismiss="modal"
@@ -386,7 +396,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn app-button" (click)="submitShift()">
-          Criar
+          {{ modalButtonNaming }}
         </button>
         <button
           class="btn btn-secondary"

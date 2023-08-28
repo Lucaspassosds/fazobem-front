@@ -212,6 +212,27 @@ export class AdminService {
     return this.http.post<Shift>(`${environment.apiUrl}/shift`, body);
   }
 
+  shiftUpdate(
+    body: {
+      startTime: string;
+      endTime: string;
+      quantityNeeded: number;
+      staffingManagerName: string;
+      staffingManagerPhoneNumber: string;
+      staffingManagerEmail: string;
+      jobRequirements: string;
+      otherInfo: string;
+      voluntaryRoleId: string;
+      organizationEventId: string;
+    },
+    shiftId: string
+  ) {
+    return this.http.patch<Shift>(
+      `${environment.apiUrl}/shift/${shiftId}`,
+      body
+    );
+  }
+
   shiftDelete(shiftId: string) {
     return this.http.delete<Shift>(`${environment.apiUrl}/shift/${shiftId}`);
   }
