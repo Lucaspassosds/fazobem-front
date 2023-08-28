@@ -5,6 +5,7 @@ import {
   Location,
   Organization,
   OrganizationAdmin,
+  OrganizationEvent,
   VoluntaryRole,
 } from 'src/constants/interfaces';
 import { environment } from 'src/environments/environment';
@@ -138,6 +139,70 @@ export class AdminService {
   ) {
     return this.http.patch<VoluntaryRole>(
       `${environment.apiUrl}/voluntary-role/${roleId}`,
+      body
+    );
+  }
+  eventsGet() {
+    return this.http.get<OrganizationEvent[]>(
+      `${environment.apiUrl}/organization-event`
+    );
+  }
+
+  eventDelete(eventId: string) {
+    return this.http.delete<OrganizationEvent>(
+      `${environment.apiUrl}/organization-event/${eventId}`
+    );
+  }
+
+  eventGetSingle(eventId: string): Observable<OrganizationEvent> {
+    return this.http.get<OrganizationEvent>(
+      `${environment.apiUrl}/organization-event/${eventId}`
+    );
+  }
+
+  eventCreate(body: {
+    name: string;
+    description: string;
+    eventDate: string;
+    isPublished: boolean;
+    locationId: string;
+  }) {
+    return this.http.post<OrganizationEvent>(
+      `${environment.apiUrl}/organization-event`,
+      body
+    );
+  }
+
+  eventUpdate(
+    body: {
+      name: string;
+      description: string;
+      eventDate: string;
+      isPublished: boolean;
+      locationId: string;
+    },
+    eventId: string
+  ) {
+    return this.http.patch<OrganizationEvent>(
+      `${environment.apiUrl}/organization-event/${eventId}`,
+      body
+    );
+  }
+
+  shiftCreate(body: {
+    startTime: string;
+    endTime: string;
+    quantityNeeded: number;
+    staffingManagerName: string;
+    staffingManagerPhoneNumber: string;
+    staffingManagerEmail: string;
+    jobRequirements: string;
+    otherInfo: string;
+    voluntaryRoleId: string;
+    organizationEventId: string;
+  }) {
+    return this.http.post<OrganizationEvent>(
+      `${environment.apiUrl}/shift`,
       body
     );
   }

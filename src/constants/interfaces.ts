@@ -53,3 +53,26 @@ export interface VoluntaryRole extends BaseTable {
   name: string;
   description: string;
 }
+
+export interface OrganizationEvent extends BaseTable {
+  name: string;
+  eventDate: string;
+  description: string;
+  isPublished: boolean;
+  locationId: string;
+  location: Location;
+  shifts: Shift[];
+}
+
+export interface Shift extends BaseTable {
+  startTime: string;
+  endTime: string;
+  quantityNeeded: number;
+  staffingManagerName: string;
+  staffingManagerPhoneNumber: string;
+  staffingManagerEmail: string;
+  jobRequirements: string;
+  otherInfo: string;
+  voluntaryRoleId: string;
+  organizationEventId: string;
+}

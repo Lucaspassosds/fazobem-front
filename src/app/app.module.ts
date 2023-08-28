@@ -55,7 +55,7 @@ import { VoluntaryListComponent } from './components/voluntary-list/voluntary-li
     MatCheckboxModule,
     MatSlideToggleModule,
     MatTooltipModule,
-    NgxMaskModule,
+    NgxMaskModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
