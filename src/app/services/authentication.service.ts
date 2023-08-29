@@ -19,6 +19,10 @@ export class AuthenticationService {
     return !!session;
   }
 
+  clearSession() {
+    return this.capacitorVaultService.clearSession();
+  }
+
   registerVoluntary(body: {
     email: string;
     name: string;

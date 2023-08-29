@@ -289,4 +289,8 @@ export class AdminService {
   userRemove(userId: string) {
     return this.http.delete<User>(`${environment.apiUrl}/user/${userId}`);
   }
+
+  userUpdate(body: { email: string; password?: string }, userId: string) {
+    return this.http.patch<User>(`${environment.apiUrl}/user/${userId}`, body);
+  }
 }

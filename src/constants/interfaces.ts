@@ -1,6 +1,7 @@
 export interface User extends BaseTable {
   name: string;
   email: string;
+  password: string;
   role: UserRole;
   securityQuestion?: string;
   securityAnswer?: string;

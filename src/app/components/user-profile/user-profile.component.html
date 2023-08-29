@@ -1,1 +1,126 @@
-<p>user-profile works!</p>
+<div id="voluntary-list" *ngIf="isReady">
+  <div class="page-top">
+    <span class="bold-text"></span>
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <hr />
+  <div class="profile">
+    <h3>{{ user.name }}</h3>
+    <form [formGroup]="formGroup" class="needs-validation text-left w-100">
+      <div class="input-group has-validation mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" [id]="'email-label'">Email</span>
+        </div>
+        <input
+          class="landing-input form-control"
+          type="email"
+          placeholder="Atualize seu email"
+          formControlName="email"
+          aria-label="Atualize seu email"
+          [attr.aria-describedby]="'email-label'"
+          [ngClass]="
+            formGroup.get('email').touched
+              ? formGroup.get('email').errors
+                ? 'is-invalid'
+                : 'is-valid'
+              : ''
+          "
+          required
+        />
+        <div class="invalid-feedback" style="text-align: left">
+          <ng-container
+            *ngIf="
+              formGroup.get('email').hasError('required') &&
+              (formGroup.get('email').touched || formGroup.get('email').dirty)
+            "
+          >
+            Por favor insira um valor válido para o campo acima.
+          </ng-container>
+        </div>
+      </div>
+      <div class="input-group has-validation mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" [id]="'password-label'">Senha</span>
+        </div>
+        <input
+          class="form-control"
+          [type]="'password'"
+          [placeholder]="'Senha'"
+          [formControlName]="'password'"
+          [attr.aria-label]="'Senha'"
+          [attr.aria-describedby]="'Senha'"
+          [ngClass]="
+            formGroup.get('password').touched
+              ? formGroup.get('password').errors
+                ? 'is-invalid'
+                : 'is-valid'
+              : ''
+          "
+        />
+        <div class="invalid-feedback" style="text-align: left">
+          <ng-container
+            *ngIf="formGroup.get('password')?.hasError('minlength')"
+          >
+            A senha deve ter no mínimo 8 caracteres
+          </ng-container>
+          <ng-container
+            *ngIf="
+              formGroup.get('password').hasError('required') &&
+              (formGroup.get('password').touched ||
+                formGroup.get('password').dirty)
+            "
+          >
+            Por favor insira um valor válido para o campo acima.
+          </ng-container>
+        </div>
+      </div>
+      <div class="input-group has-validation mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" [id]="'confirmPassword-label'"
+            >Confirmar senha</span
+          >
+        </div>
+        <input
+          class="form-control"
+          [type]="'password'"
+          [placeholder]="'Confirmar senha'"
+          [formControlName]="'confirmPassword'"
+          [attr.aria-label]="'Confirmar senha'"
+          [attr.aria-describedby]="'Confirmar senha'"
+          [ngClass]="
+            formGroup.get('confirmPassword').touched
+              ? formGroup.get('confirmPassword').errors ||
+                (formGroup.hasError('passwordMismatch') &&
+                  formGroup.get('confirmPassword')?.dirty)
+                ? 'is-invalid'
+                : 'is-valid'
+              : ''
+          "
+        />
+        <div class="invalid-feedback" style="text-align: left">
+          <ng-container *ngIf="formGroup.hasError('passwordMismatch')">
+            Senhas não coincidem
+          </ng-container>
+          <ng-container
+            *ngIf="
+              formGroup.get('confirmPassword').hasError('required') &&
+              (formGroup.get('confirmPassword').touched ||
+                formGroup.get('confirmPassword').dirty)
+            "
+          >
+            Por favor insira um valor válido para o campo acima.
+          </ng-container>
+        </div>
+      </div>
+      <button type="submit" class="btn app-button w-100" (click)="updateUser()">
+        Atualizar
+      </button>
+    </form>
+    <button class="btn btn-danger w-100 delete-acc" (click)="deleteAccount()">
+      <i class="ph ph-trash"></i>
+      Deletar conta
+    </button>
+  </div>
+</div>
