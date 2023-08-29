@@ -28,7 +28,16 @@
           <i class="ph ph-map-pin"></i>
           {{ shift.organizationEvent.location.name }}</span
         >
-        <button class="btn app-button mt-2" *ngIf="!checkPastShift(shift.organizationEvent.eventDate); else pastShift">Saiba mais</button>
+        <button
+          class="btn app-button mt-2"
+          *ngIf="
+            !checkPastShift(shift.organizationEvent.eventDate);
+            else pastShift
+          "
+          (click)="navigateToShiftDetails(shift.id)"
+        >
+          Saiba mais
+        </button>
         <ng-template #pastShift>
           <p>Tarefa Passada</p>
         </ng-template>
@@ -37,7 +46,9 @@
     <ng-template #noShifts>
       <p>
         Você verá suas tarefas aqui assim que tiver se inscrevido em uma.
-        <span class="go-to-shifts" (click)="navigateToShifts()">Encontre tarefas</span>
+        <span class="go-to-shifts" (click)="navigateToShifts()"
+          >Encontre tarefas</span
+        >
       </p>
     </ng-template>
   </div>

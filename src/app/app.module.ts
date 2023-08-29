@@ -32,6 +32,7 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { AllShiftsComponent } from './components/all-shifts/all-shifts.component';
 import { MyShiftsComponent } from './components/my-shifts/my-shifts.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ShiftDetailsComponent } from './components/shift-details/shift-details.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     AllShiftsComponent,
     MyShiftsComponent,
     UserProfileComponent,
+    ShiftDetailsComponent,
   ],
   imports: [
     BrowserModule,

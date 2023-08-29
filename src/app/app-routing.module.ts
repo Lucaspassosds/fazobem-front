@@ -17,6 +17,7 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { AllShiftsComponent } from './components/all-shifts/all-shifts.component';
 import { MyShiftsComponent } from './components/my-shifts/my-shifts.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ShiftDetailsComponent } from './components/shift-details/shift-details.component';
 
 const routes: Routes = [
   {
@@ -195,6 +196,15 @@ const routes: Routes = [
     data: {
       routeId: 18,
       pageTitle: 'User profile',
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'shift-details/:shiftId',
+    component: ShiftDetailsComponent,
+    data: {
+      routeId: 18,
+      pageTitle: 'Shift details',
     },
     canActivate: [AdminAuthGuard],
   },

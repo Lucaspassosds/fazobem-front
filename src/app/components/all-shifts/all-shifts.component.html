@@ -28,7 +28,9 @@
           <i class="ph ph-map-pin"></i>
           {{ shift.organizationEvent.location.name }}</span
         >
-        <button class="btn app-button mt-2">Saiba mais</button>
+        <button class="btn app-button mt-2" (click)="navigateToShiftDetails(shift.id)">
+          Saiba mais
+        </button>
       </div>
     </div>
   </div>

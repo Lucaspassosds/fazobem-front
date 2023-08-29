@@ -49,7 +49,14 @@ export class MyShiftsComponent {
     this.router.navigate(['all-shifts']);
   }
 
+  navigateToShiftDetails(shiftId: string) {
+    const shift = this.shifts.find((shft) => shft.id === shiftId);
+    this.router.navigate(['shift-details', shiftId], {
+      queryParams: { shift: JSON.stringify(shift) },
+    });
+  }
+
   checkPastShift(eventDate: string) {
-    return DateTime.fromISO(eventDate) >= DateTime.now()
+    return DateTime.fromISO(eventDate) <= DateTime.now();
   }
 }

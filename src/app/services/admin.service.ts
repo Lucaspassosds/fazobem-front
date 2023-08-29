@@ -269,6 +269,13 @@ export class AdminService {
     );
   }
 
+  voluntaryShiftsConfirm(body: { shiftId: string; voluntaryId: string }) {
+    return this.http.post<VoluntaryShift>(
+      `${environment.apiUrl}/voluntary-shifts/confirm`,
+      body
+    );
+  }
+
   voluntaryShiftsDelete(voluntaryShiftId: string) {
     return this.http.delete<VoluntaryShift>(
       `${environment.apiUrl}/voluntary-shifts/${voluntaryShiftId}`

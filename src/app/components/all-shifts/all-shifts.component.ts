@@ -39,4 +39,11 @@ export class AllShiftsComponent implements OnInit {
   navigateBack() {
     this.router.navigate(['routes']);
   }
+
+  navigateToShiftDetails(shiftId: string) {
+    const shift = this.shifts.find((shft) => shft.id === shiftId);
+    this.router.navigate(['shift-details', shiftId], {
+      queryParams: { shift: JSON.stringify(shift) },
+    });
+  }
 }
