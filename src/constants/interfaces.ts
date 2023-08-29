@@ -93,4 +93,5 @@ export interface Voluntary extends BaseTable {
   userId: string;
   birthdate: string;
   user: User;
+  voluntaryShift?: VoluntaryShift[];
 }
