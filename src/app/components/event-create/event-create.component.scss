@@ -4,3 +4,9 @@
   width: 100%;
   gap: 24px;
 }
+
+:host ::ng-deep #event-create {
+  .mat-column-actions {
+    justify-content: flex-end !important;
+  }
+}

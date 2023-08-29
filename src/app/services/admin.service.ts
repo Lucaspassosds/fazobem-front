@@ -7,7 +7,9 @@ import {
   OrganizationAdmin,
   OrganizationEvent,
   Shift,
+  Voluntary,
   VoluntaryRole,
+  VoluntaryShift,
 } from 'src/constants/interfaces';
 import { environment } from 'src/environments/environment';
 
@@ -235,5 +237,28 @@ export class AdminService {
 
   shiftDelete(shiftId: string) {
     return this.http.delete<Shift>(`${environment.apiUrl}/shift/${shiftId}`);
+  }
+
+  voluntariesGet() {
+    return this.http.get<Voluntary[]>(`${environment.apiUrl}/voluntary`);
+  }
+
+  voluntaryShiftsGetByShift(shiftId: string) {
+    return this.http.get<VoluntaryShift[]>(
+      `${environment.apiUrl}/voluntary-shifts/shifts/${shiftId}`
+    );
+  }
+
+  voluntaryShiftsCreate(body: { shiftId: string; voluntaryId: string }) {
+    return this.http.post<VoluntaryShift[]>(
+      `${environment.apiUrl}/voluntary-shifts`,
+      body
+    );
+  }
+
+  voluntaryShiftsDelete(voluntaryShiftId: string) {
+    return this.http.delete<VoluntaryShift>(
+      `${environment.apiUrl}/voluntary-shifts/${voluntaryShiftId}`
+    );
   }
 }

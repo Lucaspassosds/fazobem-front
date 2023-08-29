@@ -285,4 +285,27 @@ export class EventCreateComponent {
   get modalButtonNaming() {
     return !this.editShiftId ? 'Criar' : 'Editar';
   }
+
+  getActions() {
+    const actions = [
+      {
+        name: 'shiftInfo',
+        iconName: 'ph ph-gear',
+        callback: (data: any) => this.navigateToShiftInfo(data),
+      },
+    ];
+
+    return {
+      name: 'actions',
+      list: actions,
+    };
+  }
+
+  navigateToShiftInfo(data: any) {
+    const shift = this.shifts.find((shift) => shift.id === data.shiftId);
+    const dataToSend = { shift: JSON.stringify(shift), eventId: this.eventId };
+    this.router.navigate(['shift-info', data.shiftId], {
+      queryParams: dataToSend,
+    });
+  }
 }

@@ -86,4 +86,11 @@ export interface VoluntaryShift extends BaseTable {
   confirmTime: string;
   voluntaryId: string;
   shiftId: string;
+  voluntary: Voluntary;
+}
+
+export interface Voluntary extends BaseTable {
+  userId: string;
+  birthdate: string;
+  user: User;
 }

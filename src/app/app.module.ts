@@ -26,6 +26,8 @@ import { EventCreateComponent } from './components/event-create/event-create.com
 import { RoleListComponent } from './components/role-list/role-list.component';
 import { RoleCreateComponent } from './components/role-create/role-create.component';
 import { VoluntaryListComponent } from './components/voluntary-list/voluntary-list.component';
+import { ShiftInfoComponent } from './components/shift-info/shift-info.component';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { VoluntaryListComponent } from './components/voluntary-list/voluntary-li
     RoleListComponent,
     RoleCreateComponent,
     VoluntaryListComponent,
+    ShiftInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,10 +59,12 @@ import { VoluntaryListComponent } from './components/voluntary-list/voluntary-li
     MatSlideToggleModule,
     MatTooltipModule,
     NgxMaskModule.forRoot(),
+    CommonModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthInterceptor, multi: true },
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })

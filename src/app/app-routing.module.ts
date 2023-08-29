@@ -12,6 +12,7 @@ import { EventCreateComponent } from './components/event-create/event-create.com
 import { RoleListComponent } from './components/role-list/role-list.component';
 import { RoleCreateComponent } from './components/role-create/role-create.component';
 import { VoluntaryListComponent } from './components/voluntary-list/voluntary-list.component';
+import { ShiftInfoComponent } from './components/shift-info/shift-info.component';
 
 const routes: Routes = [
   {
@@ -145,6 +146,15 @@ const routes: Routes = [
     data: {
       routeId: 13,
       pageTitle: 'Voluntary list'
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'shift-info/:shiftId',
+    component: ShiftInfoComponent,
+    data: {
+      routeId: 14,
+      pageTitle: 'Shift info'
     },
     canActivate: [AdminAuthGuard],
   },
