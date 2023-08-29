@@ -240,6 +240,18 @@ export class AdminService {
     return this.http.delete<Shift>(`${environment.apiUrl}/shift/${shiftId}`);
   }
 
+  shiftsGet(expand = false) {
+    return this.http.get<Shift[]>(
+      `${environment.apiUrl}/shift?expand=${expand}`
+    );
+  }
+
+  shiftsGetByVoluntary(voluntaryId: string) {
+    return this.http.get<Shift[]>(
+      `${environment.apiUrl}/shift/voluntary/${voluntaryId}`
+    );
+  }
+
   voluntariesGet() {
     return this.http.get<Voluntary[]>(`${environment.apiUrl}/voluntary`);
   }

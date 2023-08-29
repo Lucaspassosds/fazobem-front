@@ -14,6 +14,9 @@ import { RoleCreateComponent } from './components/role-create/role-create.compon
 import { VoluntaryListComponent } from './components/voluntary-list/voluntary-list.component';
 import { ShiftInfoComponent } from './components/shift-info/shift-info.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { AllShiftsComponent } from './components/all-shifts/all-shifts.component';
+import { MyShiftsComponent } from './components/my-shifts/my-shifts.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 const routes: Routes = [
   {
@@ -165,6 +168,33 @@ const routes: Routes = [
     data: {
       routeId: 15,
       pageTitle: 'User list',
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'all-shifts',
+    component: AllShiftsComponent,
+    data: {
+      routeId: 16,
+      pageTitle: 'All shifts',
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'my-shifts',
+    component: MyShiftsComponent,
+    data: {
+      routeId: 17,
+      pageTitle: 'My shifts',
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'user-profile',
+    component: UserProfileComponent,
+    data: {
+      routeId: 18,
+      pageTitle: 'User profile',
     },
     canActivate: [AdminAuthGuard],
   },

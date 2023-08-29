@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -73,6 +73,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthInterceptor, multi: true },
     DatePipe,
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
   ],
   bootstrap: [AppComponent],
 })

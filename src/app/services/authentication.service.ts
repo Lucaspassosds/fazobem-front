@@ -55,10 +55,7 @@ export class AuthenticationService {
     securityQuestion: string;
     securityAnswer: string;
   }) {
-    return this.http.post(
-      `${environment.apiUrl}/auth/admins/register`,
-      body
-    );
+    return this.http.post(`${environment.apiUrl}/auth/admins/register`, body);
   }
 
   login(body: { email: string; password: string }) {
@@ -90,14 +87,15 @@ export class AuthenticationService {
   }
 
   getCurrentUser(): Promise<User> {
-    return this.capacitorVaultService
-      .getSession()
-      .then((session) => {
-        const user = session.user;
-        if (user.role === UserRole.organizationAdmin) {
-          user.organizationAdmin = session.organizationAdmin;
-        }
-        return user;
-      });
+    return this.capacitorVaultService.getSession().then((session) => {
+      const user = session.user;
+      if (user.role === UserRole.organizationAdmin) {
+        user.organizationAdmin = session.organizationAdmin;
+      }
+      if (user.role === UserRole.voluntary) {
+        user.voluntary = session.voluntary;
+      }
+      return user;
+    });
   }
 }

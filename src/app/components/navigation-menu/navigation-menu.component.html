@@ -1,5 +1,6 @@
 <div id="navigation-menu">
   <h4>Menu</h4>
+  <h5 *ngIf="role === UserRole.voluntary">Olá, {{ user.name }}!</h5>
   <button
     class="btn app-button"
     *ngFor="let routeOption of routeOptions"

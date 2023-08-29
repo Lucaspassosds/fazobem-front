@@ -5,6 +5,7 @@ export interface User extends BaseTable {
   securityQuestion?: string;
   securityAnswer?: string;
   organizationAdmin?: OrganizationAdmin;
+  voluntary?: Voluntary;
 }
 
 export enum UserRole {
@@ -76,6 +77,7 @@ export interface Shift extends BaseTable {
   voluntaryRoleId: string;
   organizationEventId: string;
   voluntaryRole?: VoluntaryRole;
+  organizationEvent?: OrganizationEvent;
   voluntaryShift?: VoluntaryShift[];
 }
 
