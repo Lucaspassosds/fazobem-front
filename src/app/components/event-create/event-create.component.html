@@ -1,0 +1,413 @@
+<div id="event-create" *ngIf="isReady">
+  <div class="page-top">
+    <button
+      class="btn btn-light"
+      [disabled]="checkButtonDisabled"
+      (click)="publishEvent()"
+    >
+      {{ publishButtonNaming }}
+    </button>
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <form [formGroup]="formGroup" class="needs-validation">
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="name-label">Nome</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="name"
+        placeholder="Insira o nome do evento"
+        [attr.aria-label]="'Insira o nome do evento'"
+        [attr.aria-describedby]="'name-label'"
+        required
+        [ngClass]="
+          formGroup.get('name').touched
+            ? formGroup.get('name').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="eventDate-label">Data</span>
+      </div>
+      <input
+        type="date"
+        class="form-control"
+        formControlName="eventDate"
+        placeholder="Data"
+        [attr.aria-label]="'Data'"
+        [attr.aria-describedby]="'eventDate-label'"
+        required
+        [ngClass]="
+          formGroup.get('eventDate').touched
+            ? formGroup.get('eventDate').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+    <div class="input-group has-validation mb-3">
+      <div class="dropdown" style="width: 100%">
+        <button
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          (click)="openDropdown = !openDropdown"
+          style="width: 100%; text-align: left"
+        >
+          {{ formGroup.get("location").value || "Localidade" }}
+        </button>
+        <div
+          class="dropdown-menu"
+          aria-labelledby="dropdownMenuButton"
+          [ngStyle]="{ display: openDropdown ? 'block' : 'none' }"
+        >
+          <a
+            *ngFor="let option of locationOptions"
+            class="dropdown-item"
+            href="#"
+            (click)="selectItem(option, 'location'); openDropdown = false"
+            >{{ option }}</a
+          >
+        </div>
+      </div>
+    </div>
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="description">Descrição</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="description"
+        placeholder="Descrição"
+        [attr.aria-label]="'Descrição'"
+        [attr.aria-describedby]="'description'"
+        required
+        [ngClass]="
+          formGroup.get('description').touched
+            ? formGroup.get('description').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+
+    <button
+      type="submit"
+      class="btn app-button"
+      (click)="submitOrganizationEvent()"
+    >
+      {{ buttonNaming }}
+    </button>
+  </form>
+  <div class="invited-admins" *ngIf="eventId">
+    <h5>Tarefas do evento</h5>
+    <hr />
+    <button
+      class="btn app-button mb-3"
+      type="button"
+      data-toggle="modal"
+      data-target="#shiftsModal"
+      (click)="openModal()"
+    >
+      Criar tarefa
+    </button>
+    <app-table
+      [displayNames]="[
+        'Papel',
+        'Hora de início',
+        'Hora de término',
+        'Inscrições'
+      ]"
+      [fieldNames]="[
+        'voluntaryRole',
+        'startTime',
+        'endTime',
+        'positionsFilled',
+        'actions'
+      ]"
+      [hasCounter]="true"
+      [isEditable]="true"
+      [rows]="displayShifts"
+      [isDeletable]="true"
+      [customEditEvent]="true"
+      [iconListFields]="[getActions()]"
+      (deleteEventEmitter)="removeShift($event)"
+      (editEventEmitter)="openModal($event)"
+      *ngIf="displayShifts.length"
+    >
+    </app-table>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  tabindex="-1"
+  id="shiftsModal"
+  role="dialog"
+  aria-labelledby="modalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" *ngIf="isReady">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">{{ modalTitle }}</h5>
+        <button
+          class="btn close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="shiftsModal.hide()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" [formGroup]="modalFormGroup">
+        <div class="input-group has-validation mb-3">
+          <div class="dropdown" style="width: 100%">
+            <button
+              class="btn btn-light dropdown-toggle"
+              type="button"
+              id="modalDropdownMenuButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              (click)="openModalDropdown = !openModalDropdown"
+              style="width: 100%; text-align: left"
+            >
+              {{ modalFormGroup.get("voluntaryRole")?.value || "Papel" }}
+            </button>
+            <div
+              class="dropdown-menu"
+              aria-labelledby="modalDropdownMenuButton"
+              [ngStyle]="{ display: openModalDropdown ? 'block' : 'none' }"
+            >
+              <a
+                *ngFor="let option of roleOptions"
+                class="dropdown-item"
+                href="#"
+                (click)="
+                  selectItem(option, 'voluntaryRole', true);
+                  openModalDropdown = false
+                "
+                >{{ option }}</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="input-group has-validation mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="startTime-label"
+              >Hora de início</span
+            >
+          </div>
+          <input
+            type="time"
+            class="form-control"
+            formControlName="startTime"
+            placeholder="Insira o horário de início do evento"
+            [attr.aria-label]="'Insira o horário de início do evento'"
+            [attr.aria-describedby]="'startTime-label'"
+            required
+            [ngClass]="
+              modalFormGroup.get('startTime')?.touched
+                ? modalFormGroup.get('startTime')?.errors
+                  ? 'is-invalid'
+                  : 'is-valid'
+                : ''
+            "
+          />
+        </div>
+        <div class="input-group has-validation mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="endTime-label"
+              >Hora de término</span
+            >
+          </div>
+          <input
+            type="time"
+            class="form-control"
+            formControlName="endTime"
+            placeholder="Insira o horário de término do evento"
+            [attr.aria-label]="'Insira o horário de término do evento'"
+            [attr.aria-describedby]="'endTime-label'"
+            required
+            [ngClass]="
+              modalFormGroup.get('endTime')?.touched
+                ? modalFormGroup.get('endTime').errors
+                  ? 'is-invalid'
+                  : 'is-valid'
+                : ''
+            "
+          />
+        </div>
+        <div class="input-group has-validation mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="quantityNeeded"
+              >Quantidade necessária</span
+            >
+          </div>
+          <input
+            type="number"
+            [min]="0"
+            [max]="9999"
+            class="form-control"
+            formControlName="quantityNeeded"
+            placeholder="Quantidade necessária"
+            [attr.aria-label]="'Quantidade necessária'"
+            [attr.aria-describedby]="'quantityNeeded'"
+            required
+            [ngClass]="
+              modalFormGroup.get('quantityNeeded')?.touched
+                ? modalFormGroup.get('quantityNeeded').errors
+                  ? 'is-invalid'
+                  : 'is-valid'
+                : ''
+            "
+          />
+        </div>
+        <div class="input-group has-validation mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="staffingManagerName-label"
+              >Nome do responsável</span
+            >
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="staffingManagerName"
+            placeholder="Insira o nome do responsável pela tarefa"
+            [attr.aria-label]="'Insira o nome do responsável pela tarefa'"
+            [attr.aria-describedby]="'staffingManagerName-label'"
+            required
+            [ngClass]="
+              modalFormGroup.get('staffingManagerName')?.touched
+                ? modalFormGroup.get('staffingManagerName').errors
+                  ? 'is-invalid'
+                  : 'is-valid'
+                : ''
+            "
+          />
+        </div>
+        <div class="input-group has-validation mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="staffingManagerPhoneNumber-label"
+              >Telefone do responsável</span
+            >
+          </div>
+          <input
+            type="text"
+            mask="(00) 00000-0000"
+            class="form-control"
+            formControlName="staffingManagerPhoneNumber"
+            placeholder="Insira o telefone do responsável"
+            [attr.aria-label]="'Insira o telefone do responsável'"
+            [attr.aria-describedby]="'staffingManagerPhoneNumber-label'"
+            required
+            [ngClass]="
+              modalFormGroup.get('staffingManagerPhoneNumber')?.touched
+                ? modalFormGroup.get('staffingManagerPhoneNumber').errors
+                  ? 'is-invalid'
+                  : 'is-valid'
+                : ''
+            "
+          />
+        </div>
+        <div class="input-group has-validation mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="staffingManagerEmail-label"
+              >Email do responsável</span
+            >
+          </div>
+          <input
+            type="email"
+            class="form-control"
+            formControlName="staffingManagerEmail"
+            placeholder="Insira o email do responsável"
+            [attr.aria-label]="'Insira o email do responsável'"
+            [attr.aria-describedby]="'staffingManagerEmail-label'"
+            required
+            [ngClass]="
+              modalFormGroup.get('staffingManagerEmail')?.touched
+                ? modalFormGroup.get('staffingManagerEmail').errors
+                  ? 'is-invalid'
+                  : 'is-valid'
+                : ''
+            "
+          />
+        </div>
+        <div class="input-group has-validation mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="jobRequirements-label"
+              >Requisitos</span
+            >
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="jobRequirements"
+            placeholder="Insira os requisitos minimos para exercer a tarefa"
+            [attr.aria-label]="
+              'Insira os requisitos minimos para exercer a tarefa'
+            "
+            [attr.aria-describedby]="'jobRequirements-label'"
+            [ngClass]="
+              modalFormGroup.get('jobRequirements')?.touched
+                ? modalFormGroup.get('jobRequirements').errors
+                  ? 'is-invalid'
+                  : 'is-valid'
+                : ''
+            "
+          />
+        </div>
+        <div class="input-group has-validation mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="otherInfo-label"
+              >Outras informações</span
+            >
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="otherInfo"
+            placeholder="Insira outras informações"
+            [attr.aria-label]="'Insira outras informações'"
+            [attr.aria-describedby]="'otherInfo-label'"
+            required
+            [ngClass]="
+              modalFormGroup.get('otherInfo')?.touched
+                ? modalFormGroup.get('otherInfo').errors
+                  ? 'is-invalid'
+                  : 'is-valid'
+                : ''
+            "
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn app-button" (click)="submitShift()">
+          {{ modalButtonNaming }}
+        </button>
+        <button
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="shiftsModal.hide()"
+        >
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

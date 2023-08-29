@@ -19,6 +19,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgxMaskModule } from 'ngx-mask';
+import { LocationListComponent } from './components/location-list/location-list.component';
+import { LocationCreateComponent } from './components/location-create/location-create.component';
+import { EventListComponent } from './components/event-list/event-list.component';
+import { EventCreateComponent } from './components/event-create/event-create.component';
+import { RoleListComponent } from './components/role-list/role-list.component';
+import { RoleCreateComponent } from './components/role-create/role-create.component';
+import { VoluntaryListComponent } from './components/voluntary-list/voluntary-list.component';
+import { ShiftInfoComponent } from './components/shift-info/shift-info.component';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -28,6 +37,14 @@ import { NgxMaskModule } from 'ngx-mask';
     CompanyListComponent,
     CompanyCreateComponent,
     AppTableComponent,
+    LocationListComponent,
+    LocationCreateComponent,
+    EventListComponent,
+    EventCreateComponent,
+    RoleListComponent,
+    RoleCreateComponent,
+    VoluntaryListComponent,
+    ShiftInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,11 +58,13 @@ import { NgxMaskModule } from 'ngx-mask';
     MatCheckboxModule,
     MatSlideToggleModule,
     MatTooltipModule,
-    NgxMaskModule,
+    NgxMaskModule.forRoot(),
+    CommonModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthInterceptor, multi: true },
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })

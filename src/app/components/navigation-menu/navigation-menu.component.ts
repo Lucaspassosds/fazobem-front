@@ -13,25 +13,46 @@ interface RouteOption {
 @Component({
   selector: 'app-navigation-menu',
   templateUrl: './navigation-menu.component.html',
-  styleUrls: ['./navigation-menu.component.scss']
+  styleUrls: ['./navigation-menu.component.scss'],
 })
 export class NavigationMenuComponent implements OnInit {
-
   systemAdminRoutes: RouteOption[] = [
     {
       route: 'company-list',
       label: 'Organizações',
-      icon: 'ph ph-buildings'
+      icon: 'ph ph-buildings',
     },
   ];
-  orgAdminRoutes: RouteOption[] = [];
+  orgAdminRoutes: RouteOption[] = [
+    {
+      route: 'location-list',
+      label: 'Localidades',
+      icon: 'ph ph-map-pin-line',
+    },
+    {
+      route: 'event-list',
+      label: 'Eventos',
+      icon: 'ph ph-star',
+    },
+    {
+      route: 'role-list',
+      label: 'Papéis',
+      icon: 'ph ph-clipboard-text'
+    },
+    {
+      route: 'voluntary-list',
+      label: 'Voluntários',
+      icon: 'ph ph-users-three'
+    }
+  ];
   voluntaryRoutes: RouteOption[] = [];
 
   role: UserRole;
 
-  constructor(private authService: AuthenticationService, private router: Router) {
-
-  }
+  constructor(
+    private authService: AuthenticationService,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     const isAuthenticated = await this.authService.isAuthenticated();
@@ -43,7 +64,6 @@ export class NavigationMenuComponent implements OnInit {
   }
 
   get routeOptions() {
-
     const { role } = this;
 
     if (role === UserRole.systemAdmin) {
@@ -71,8 +91,7 @@ export class NavigationMenuComponent implements OnInit {
         })
         .catch((error: any) => {
           throw new Error(error);
-        })
+        });
     }
   }
-
 }

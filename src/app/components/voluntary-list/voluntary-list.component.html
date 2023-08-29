@@ -1,0 +1,22 @@
+<div id="voluntary-list" *ngIf="isReady">
+  <div class="page-top">
+    <span class="bold-text"></span>
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <div class="voluntaries">
+    <h5>Voluntários cadastrados no sistema</h5>
+    <hr />
+    <app-table
+      [displayNames]="['Nome', 'Email', 'Cadastrou', 'Nº de Tarefas participadas']"
+      [fieldNames]="['name', 'email', 'autoCreateTs', 'totalShifts']"
+      [hasCounter]="true"
+      [isEditable]="false"
+      [rows]="displayVoluntaries"
+      [isDeletable]="false"
+      *ngIf="displayVoluntaries.length"
+    >
+    </app-table>
+  </div>
+</div>

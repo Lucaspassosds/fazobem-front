@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CapacitorVaultService } from './capacitor-vault.service';
 import { environment } from 'src/environments/environment';
 import { defer, from, switchMap, tap } from 'rxjs';
-import { User } from 'src/constants/interfaces';
+import { User, UserRole } from 'src/constants/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -92,6 +92,12 @@ export class AuthenticationService {
   getCurrentUser(): Promise<User> {
     return this.capacitorVaultService
       .getSession()
-      .then((session) => session.user);
+      .then((session) => {
+        const user = session.user;
+        if (user.role === UserRole.organizationAdmin) {
+          user.organizationAdmin = session.organizationAdmin;
+        }
+        return user;
+      });
   }
 }

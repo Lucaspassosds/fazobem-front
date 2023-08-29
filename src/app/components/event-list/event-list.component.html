@@ -1,0 +1,47 @@
+<div id="event-list">
+  <div class="page-top">
+    <button
+      (click)="navigateToEventCreate()"
+      mat-raised-button
+      class="btn app-button"
+    >
+      Adicionar evento
+    </button>
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <app-table
+    *ngIf="isReady && displayEvents.length; else no_orgs"
+    [displayNames]="[
+      'Nome do evento',
+      'Endereço',
+      'Data',
+      'Publicado',
+      'Descrição',
+      'Tarefas atribuídas'
+    ]"
+    [fieldNames]="[
+      'name',
+      'address',
+      'eventDate',
+      'isPublished',
+      'description',
+      'shiftCount'
+    ]"
+    [hasCounter]="true"
+    [isEditable]="true"
+    [rows]="displayEvents"
+    [editRoute]="'event-create'"
+    editOrDeleteIdFiledName="eventId"
+    [isDeletable]="true"
+    (deleteEventEmitter)="deleteEvent($event)"
+  >
+  </app-table>
+  <ng-template #no_orgs>
+    <p>
+      Nenhum evento encontrado! Por favor cadastre um evento através do botão
+      acima.
+    </p>
+  </ng-template>
+</div>

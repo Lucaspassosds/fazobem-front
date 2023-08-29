@@ -1,0 +1,59 @@
+<div id="role-create" *ngIf="isReady">
+  <div class="page-top">
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <form [formGroup]="formGroup" class="needs-validation">
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="name-label">Nome</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="name"
+        placeholder="Insira o nome do papel"
+        [attr.aria-label]="'Insira o nome do papel'"
+        [attr.aria-describedby]="'name-label'"
+        required
+        [ngClass]="
+          formGroup.get('name').touched
+            ? formGroup.get('name').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+    <div class="input-group has-validation mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="description">Descrição</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="description"
+        placeholder="Descrição"
+        [attr.aria-label]="'Descrição'"
+        [attr.aria-describedby]="'description'"
+        required
+        [ngClass]="
+          formGroup.get('description').touched
+            ? formGroup.get('description').errors
+              ? 'is-invalid'
+              : 'is-valid'
+            : ''
+        "
+      />
+    </div>
+
+    <button
+      type="submit"
+      class="btn app-button"
+      (click)="submitVoluntaryRole()"
+    >
+      {{ buttonNaming }}
+    </button>
+  </form>
+</div>
