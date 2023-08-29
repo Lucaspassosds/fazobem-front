@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { GlobalService } from 'src/app/services/global.service';
-import { UserRole } from 'src/constants/interfaces';
+import { User, UserRole } from 'src/constants/interfaces';
 
 interface RouteOption {
   route: string;
@@ -22,6 +22,11 @@ export class NavigationMenuComponent implements OnInit {
       label: 'Organizações',
       icon: 'ph ph-buildings',
     },
+    {
+      route: 'user-list',
+      label: 'Usuários',
+      icon: 'ph ph-users',
+    },
   ];
   orgAdminRoutes: RouteOption[] = [
     {
@@ -37,17 +42,36 @@ export class NavigationMenuComponent implements OnInit {
     {
       route: 'role-list',
       label: 'Papéis',
-      icon: 'ph ph-clipboard-text'
+      icon: 'ph ph-clipboard-text',
     },
     {
       route: 'voluntary-list',
       label: 'Voluntários',
-      icon: 'ph ph-users-three'
-    }
+      icon: 'ph ph-users-three',
+    },
   ];
-  voluntaryRoutes: RouteOption[] = [];
+  voluntaryRoutes: RouteOption[] = [
+    {
+      route: 'all-shifts',
+      label: 'Ver tarefas disponíveis',
+      icon: 'ph ph-list-bullets',
+    },
+    {
+      route: 'my-shifts',
+      label: 'Minhas tarefas',
+      icon: 'ph ph-list-checks',
+    },
+    {
+      route: 'user-profile',
+      label: 'Meu perfil',
+      icon: 'ph ph-user',
+    },
+  ];
 
   role: UserRole;
+  user: User;
+
+  UserRole = UserRole;
 
   constructor(
     private authService: AuthenticationService,
@@ -61,6 +85,7 @@ export class NavigationMenuComponent implements OnInit {
     }
     const user = await this.authService.getCurrentUser();
     this.role = user.role;
+    this.user = user;
   }
 
   get routeOptions() {

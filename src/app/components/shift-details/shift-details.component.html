@@ -1,0 +1,66 @@
+<div id="shift-details" *ngIf="isReady">
+  <div class="page-top">
+    <span class="bold-text"></span>
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <div class="details">
+    <h4>
+      {{ shift.voluntaryRole.name }} -
+      {{ shift.organizationEvent.eventDate | date : "dd 'de' MMMM, yyyy" }}
+    </h4>
+    <hr />
+    <div class="infos">
+      <h6><i class="ph ph-calendar"></i> Evento</h6>
+      <span>{{ shift.organizationEvent.name }}</span>
+      <h6><i class="ph ph-clock"></i>Horário</h6>
+      <span
+        >{{ getFormattedTime(shift.startTime) }} -
+        {{ getFormattedTime(shift.endTime) }}</span
+      >
+      <h6><i class="ph ph-map-pin"></i> Local</h6>
+      <span
+        >{{ shift.organizationEvent.location.name }} -
+        {{ getFormattedAddress(shift.organizationEvent.location) }}</span
+      >
+      <hr />
+      <h6><i class="ph ph-note"></i> Requisitos</h6>
+      <span>{{ shift.jobRequirements || "Nenhum" }}</span>
+      <h6><i class="ph ph-info"></i> Outras informações</h6>
+      <span>{{ shift.jobRequirements || "Nenhuma" }}</span>
+      <hr />
+      <h5>Contato responsável</h5>
+      <div class="contact-data">
+        <span> <i class="ph ph-user"></i> {{ shift.staffingManagerName }}</span>
+        <span>
+          <i class="ph ph-phone"></i>
+          {{ shift.staffingManagerPhoneNumber }}</span
+        >
+        <span>
+          <i class="ph ph-envelope"></i>
+          {{ shift.staffingManagerEmail }}</span
+        >
+      </div>
+      <hr />
+    </div>
+    <div class="buttons w-100 mb-2">
+      <button
+        class="btn app-button p-2 w-100"
+        style="font-size: 18px"
+        (click)="buttonCallback()"
+        [disabled]="buttonDisabled"
+      >
+        {{ buttonNaming }}
+      </button>
+      <button
+        class="btn btn-danger p-2"
+        style="font-size: 18px"
+        (click)="cancelShift()"
+        *ngIf="shift.voluntaryShift.length"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>

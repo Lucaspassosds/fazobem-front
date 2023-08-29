@@ -13,6 +13,11 @@ import { RoleListComponent } from './components/role-list/role-list.component';
 import { RoleCreateComponent } from './components/role-create/role-create.component';
 import { VoluntaryListComponent } from './components/voluntary-list/voluntary-list.component';
 import { ShiftInfoComponent } from './components/shift-info/shift-info.component';
+import { UserListComponent } from './components/user-list/user-list.component';
+import { AllShiftsComponent } from './components/all-shifts/all-shifts.component';
+import { MyShiftsComponent } from './components/my-shifts/my-shifts.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ShiftDetailsComponent } from './components/shift-details/shift-details.component';
 
 const routes: Routes = [
   {
@@ -37,7 +42,7 @@ const routes: Routes = [
     component: CompanyListComponent,
     data: {
       routeId: 2,
-      pageTitle: 'Organization list'
+      pageTitle: 'Organization list',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -46,7 +51,7 @@ const routes: Routes = [
     component: CompanyCreateComponent,
     data: {
       routeId: 3,
-      pageTitle: 'Organization form'
+      pageTitle: 'Organization form',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -55,7 +60,7 @@ const routes: Routes = [
     component: CompanyCreateComponent,
     data: {
       routeId: 3,
-      pageTitle: 'Organization form'
+      pageTitle: 'Organization form',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -64,7 +69,7 @@ const routes: Routes = [
     component: LocationListComponent,
     data: {
       routeId: 4,
-      pageTitle: 'Location list'
+      pageTitle: 'Location list',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -73,7 +78,7 @@ const routes: Routes = [
     component: LocationCreateComponent,
     data: {
       routeId: 5,
-      pageTitle: 'Location form'
+      pageTitle: 'Location form',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -82,7 +87,7 @@ const routes: Routes = [
     component: LocationCreateComponent,
     data: {
       routeId: 6,
-      pageTitle: 'Location form'
+      pageTitle: 'Location form',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -91,7 +96,7 @@ const routes: Routes = [
     component: EventListComponent,
     data: {
       routeId: 7,
-      pageTitle: 'Event list'
+      pageTitle: 'Event list',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -100,7 +105,7 @@ const routes: Routes = [
     component: EventCreateComponent,
     data: {
       routeId: 8,
-      pageTitle: 'Event form'
+      pageTitle: 'Event form',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -109,7 +114,7 @@ const routes: Routes = [
     component: EventCreateComponent,
     data: {
       routeId: 9,
-      pageTitle: 'Event form'
+      pageTitle: 'Event form',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -118,7 +123,7 @@ const routes: Routes = [
     component: RoleListComponent,
     data: {
       routeId: 10,
-      pageTitle: 'Role list'
+      pageTitle: 'Role list',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -127,7 +132,7 @@ const routes: Routes = [
     component: RoleCreateComponent,
     data: {
       routeId: 11,
-      pageTitle: 'Role form'
+      pageTitle: 'Role form',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -136,7 +141,7 @@ const routes: Routes = [
     component: RoleCreateComponent,
     data: {
       routeId: 12,
-      pageTitle: 'Role form'
+      pageTitle: 'Role form',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -145,7 +150,7 @@ const routes: Routes = [
     component: VoluntaryListComponent,
     data: {
       routeId: 13,
-      pageTitle: 'Voluntary list'
+      pageTitle: 'Voluntary list',
     },
     canActivate: [AdminAuthGuard],
   },
@@ -154,7 +159,52 @@ const routes: Routes = [
     component: ShiftInfoComponent,
     data: {
       routeId: 14,
-      pageTitle: 'Shift info'
+      pageTitle: 'Shift info',
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'user-list',
+    component: UserListComponent,
+    data: {
+      routeId: 15,
+      pageTitle: 'User list',
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'all-shifts',
+    component: AllShiftsComponent,
+    data: {
+      routeId: 16,
+      pageTitle: 'All shifts',
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'my-shifts',
+    component: MyShiftsComponent,
+    data: {
+      routeId: 17,
+      pageTitle: 'My shifts',
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'user-profile',
+    component: UserProfileComponent,
+    data: {
+      routeId: 18,
+      pageTitle: 'User profile',
+    },
+    canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'shift-details/:shiftId',
+    component: ShiftDetailsComponent,
+    data: {
+      routeId: 18,
+      pageTitle: 'Shift details',
     },
     canActivate: [AdminAuthGuard],
   },

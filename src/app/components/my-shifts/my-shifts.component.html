@@ -1,0 +1,55 @@
+<div id="voluntary-list" *ngIf="isReady">
+  <div class="page-top">
+    <span class="bold-text"></span>
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <div class="shifts">
+    <h5>Suas Tarefas:</h5>
+    <hr />
+    <div class="shifts-list" *ngIf="shifts.length; else noShifts">
+      <div class="shift-card" *ngFor="let shift of shifts">
+        <h4>
+          {{ shift.organizationEvent.eventDate | date : "dd 'de' MMMM, yyyy" }}
+        </h4>
+        <span>
+          <i class="ph ph-user-list"></i> {{ shift.voluntaryRole.name }}</span
+        >
+        <span>
+          <i class="ph ph-clock"></i> {{ getFormattedTime(shift.startTime) }} -
+          {{ getFormattedTime(shift.endTime) }}</span
+        >
+        <span>
+          <i class="ph ph-calendar"></i>
+          {{ shift.organizationEvent.name }}</span
+        >
+        <span>
+          <i class="ph ph-map-pin"></i>
+          {{ shift.organizationEvent.location.name }}</span
+        >
+        <button
+          class="btn app-button mt-2"
+          *ngIf="
+            !checkPastShift(shift.organizationEvent.eventDate);
+            else pastShift
+          "
+          (click)="navigateToShiftDetails(shift.id)"
+        >
+          Saiba mais
+        </button>
+        <ng-template #pastShift>
+          <p>Tarefa Passada</p>
+        </ng-template>
+      </div>
+    </div>
+    <ng-template #noShifts>
+      <p>
+        Você verá suas tarefas aqui assim que tiver se inscrito em uma.
+        <span class="go-to-shifts" (click)="navigateToShifts()"
+          >Encontre tarefas</span
+        >
+      </p>
+    </ng-template>
+  </div>
+</div>

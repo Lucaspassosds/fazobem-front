@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -28,6 +28,11 @@ import { RoleCreateComponent } from './components/role-create/role-create.compon
 import { VoluntaryListComponent } from './components/voluntary-list/voluntary-list.component';
 import { ShiftInfoComponent } from './components/shift-info/shift-info.component';
 import { CommonModule, DatePipe } from '@angular/common';
+import { UserListComponent } from './components/user-list/user-list.component';
+import { AllShiftsComponent } from './components/all-shifts/all-shifts.component';
+import { MyShiftsComponent } from './components/my-shifts/my-shifts.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ShiftDetailsComponent } from './components/shift-details/shift-details.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +50,11 @@ import { CommonModule, DatePipe } from '@angular/common';
     RoleCreateComponent,
     VoluntaryListComponent,
     ShiftInfoComponent,
+    UserListComponent,
+    AllShiftsComponent,
+    MyShiftsComponent,
+    UserProfileComponent,
+    ShiftDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,6 +75,7 @@ import { CommonModule, DatePipe } from '@angular/common';
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthInterceptor, multi: true },
     DatePipe,
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
   ],
   bootstrap: [AppComponent],
 })

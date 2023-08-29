@@ -7,6 +7,7 @@ import {
   OrganizationAdmin,
   OrganizationEvent,
   Shift,
+  User,
   Voluntary,
   VoluntaryRole,
   VoluntaryShift,
@@ -239,6 +240,18 @@ export class AdminService {
     return this.http.delete<Shift>(`${environment.apiUrl}/shift/${shiftId}`);
   }
 
+  shiftsGet(expand = false) {
+    return this.http.get<Shift[]>(
+      `${environment.apiUrl}/shift?expand=${expand}`
+    );
+  }
+
+  shiftsGetByVoluntary(voluntaryId: string) {
+    return this.http.get<Shift[]>(
+      `${environment.apiUrl}/shift/voluntary/${voluntaryId}`
+    );
+  }
+
   voluntariesGet() {
     return this.http.get<Voluntary[]>(`${environment.apiUrl}/voluntary`);
   }
@@ -250,8 +263,15 @@ export class AdminService {
   }
 
   voluntaryShiftsCreate(body: { shiftId: string; voluntaryId: string }) {
-    return this.http.post<VoluntaryShift[]>(
+    return this.http.post<VoluntaryShift>(
       `${environment.apiUrl}/voluntary-shifts`,
+      body
+    );
+  }
+
+  voluntaryShiftsConfirm(body: { shiftId: string; voluntaryId: string }) {
+    return this.http.post<VoluntaryShift>(
+      `${environment.apiUrl}/voluntary-shifts/confirm`,
       body
     );
   }
@@ -260,5 +280,17 @@ export class AdminService {
     return this.http.delete<VoluntaryShift>(
       `${environment.apiUrl}/voluntary-shifts/${voluntaryShiftId}`
     );
+  }
+
+  usersGet() {
+    return this.http.get<User[]>(`${environment.apiUrl}/user`);
+  }
+
+  userRemove(userId: string) {
+    return this.http.delete<User>(`${environment.apiUrl}/user/${userId}`);
+  }
+
+  userUpdate(body: { email: string; password?: string }, userId: string) {
+    return this.http.patch<User>(`${environment.apiUrl}/user/${userId}`, body);
   }
 }
