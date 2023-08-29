@@ -28,6 +28,7 @@ import { RoleCreateComponent } from './components/role-create/role-create.compon
 import { VoluntaryListComponent } from './components/voluntary-list/voluntary-list.component';
 import { ShiftInfoComponent } from './components/shift-info/shift-info.component';
 import { CommonModule, DatePipe } from '@angular/common';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { CommonModule, DatePipe } from '@angular/common';
     RoleCreateComponent,
     VoluntaryListComponent,
     ShiftInfoComponent,
+    UserListComponent,
   ],
   imports: [
     BrowserModule,

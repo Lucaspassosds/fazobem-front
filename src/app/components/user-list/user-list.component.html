@@ -1,0 +1,23 @@
+<div id="user-list" *ngIf="isReady">
+  <div class="page-top">
+    <span class="bold-text"></span>
+    <span class="bold-text" style="cursor: pointer" (click)="navigateBack()"
+      >Voltar</span
+    >
+  </div>
+  <div class="voluntaries">
+    <h5>Usuários cadastrados no sistema</h5>
+    <hr />
+    <app-table
+      [displayNames]="['Nome', 'Email', 'Cadastrou', 'Tipo de usuário']"
+      [fieldNames]="['name', 'email', 'autoCreateTs', 'role']"
+      [hasCounter]="true"
+      [isEditable]="false"
+      [rows]="displayUsers"
+      [isDeletable]="true"
+      (deleteEventEmitter)="removeUser($event)"
+      *ngIf="displayUsers.length"
+    >
+    </app-table>
+  </div>
+</div>

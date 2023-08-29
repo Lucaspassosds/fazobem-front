@@ -1,5 +1,4 @@
-export interface User {
-  id: string;
+export interface User extends BaseTable {
   name: string;
   email: string;
   role: UserRole;

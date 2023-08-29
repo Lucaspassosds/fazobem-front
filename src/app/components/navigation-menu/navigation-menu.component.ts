@@ -22,6 +22,11 @@ export class NavigationMenuComponent implements OnInit {
       label: 'Organizações',
       icon: 'ph ph-buildings',
     },
+    {
+      route: 'user-list',
+      label: 'Usuários',
+      icon: 'ph ph-users',
+    },
   ];
   orgAdminRoutes: RouteOption[] = [
     {
@@ -37,13 +42,13 @@ export class NavigationMenuComponent implements OnInit {
     {
       route: 'role-list',
       label: 'Papéis',
-      icon: 'ph ph-clipboard-text'
+      icon: 'ph ph-clipboard-text',
     },
     {
       route: 'voluntary-list',
       label: 'Voluntários',
-      icon: 'ph ph-users-three'
-    }
+      icon: 'ph ph-users-three',
+    },
   ];
   voluntaryRoutes: RouteOption[] = [];
 

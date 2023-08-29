@@ -7,6 +7,7 @@ import {
   OrganizationAdmin,
   OrganizationEvent,
   Shift,
+  User,
   Voluntary,
   VoluntaryRole,
   VoluntaryShift,
@@ -250,7 +251,7 @@ export class AdminService {
   }
 
   voluntaryShiftsCreate(body: { shiftId: string; voluntaryId: string }) {
-    return this.http.post<VoluntaryShift[]>(
+    return this.http.post<VoluntaryShift>(
       `${environment.apiUrl}/voluntary-shifts`,
       body
     );
@@ -260,5 +261,13 @@ export class AdminService {
     return this.http.delete<VoluntaryShift>(
       `${environment.apiUrl}/voluntary-shifts/${voluntaryShiftId}`
     );
+  }
+
+  usersGet() {
+    return this.http.get<User[]>(`${environment.apiUrl}/user`);
+  }
+
+  userRemove(userId: string) {
+    return this.http.delete<User>(`${environment.apiUrl}/user/${userId}`);
   }
 }
