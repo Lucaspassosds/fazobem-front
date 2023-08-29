@@ -29,6 +29,9 @@ import { VoluntaryListComponent } from './components/voluntary-list/voluntary-li
 import { ShiftInfoComponent } from './components/shift-info/shift-info.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { AllShiftsComponent } from './components/all-shifts/all-shifts.component';
+import { MyShiftsComponent } from './components/my-shifts/my-shifts.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,9 @@ import { UserListComponent } from './components/user-list/user-list.component';
     VoluntaryListComponent,
     ShiftInfoComponent,
     UserListComponent,
+    AllShiftsComponent,
+    MyShiftsComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,

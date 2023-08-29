@@ -50,7 +50,23 @@ export class NavigationMenuComponent implements OnInit {
       icon: 'ph ph-users-three',
     },
   ];
-  voluntaryRoutes: RouteOption[] = [];
+  voluntaryRoutes: RouteOption[] = [
+    {
+      route: 'all-shifts',
+      label: 'Ver tarefas disponíveis',
+      icon: 'ph ph-list-bullets',
+    },
+    {
+      route: 'my-shifts',
+      label: 'Minhas tarefas',
+      icon: 'ph ph-list-checks',
+    },
+    {
+      route: 'user-profile',
+      label: 'Meu perfil',
+      icon: 'ph ph-user',
+    },
+  ];
 
   role: UserRole;
 
