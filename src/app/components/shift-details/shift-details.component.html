@@ -28,14 +28,14 @@
       <h6><i class="ph ph-note"></i> Requisitos</h6>
       <span>{{ shift.jobRequirements || "Nenhum" }}</span>
       <h6><i class="ph ph-info"></i> Outras informações</h6>
-      <span>{{ shift.jobRequirements || "Nenhuma" }}</span>
+      <span>{{ shift.otherInfo || "Nenhuma" }}</span>
       <hr />
       <h5>Contato responsável</h5>
       <div class="contact-data">
         <span> <i class="ph ph-user"></i> {{ shift.staffingManagerName }}</span>
         <span>
           <i class="ph ph-phone"></i>
-          {{ shift.staffingManagerPhoneNumber }}</span
+          {{ shift.staffingManagerPhoneNumber | mask : "(00) 00000-0000" }}</span
         >
         <span>
           <i class="ph ph-envelope"></i>
